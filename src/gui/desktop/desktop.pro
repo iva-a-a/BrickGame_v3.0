@@ -9,7 +9,6 @@ TEMPLATE = app
 TARGET = desktop
 INCLUDEPATH += .
 
-
 # You can make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # Please consult the documentation of the deprecated API in order to know
@@ -40,7 +39,5 @@ SOURCES += brick_game_desk.cpp \
            ../../brick_game/tetris/back_tetris.c \
            ../../brick_game/tetris/controller_tetris.c \
 
-# --- FIX for macOS 11+ (Big Sur → Sonoma/Sequoia) ---
-# Remove deprecated AGL.framework that no longer exists
-LIBS -= -framework AGL
-QMAKE_LIBS_OPENGL -= -framework AGL
+TEMPLATE = app
+CONFIG -= app_bundle
