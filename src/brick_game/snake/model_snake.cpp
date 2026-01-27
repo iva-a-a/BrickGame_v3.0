@@ -3,7 +3,7 @@
 #include <algorithm>
 
 SnakeGame::SnakeGame() {
-  srand(time(NULL));
+  srand(static_cast<unsigned int>(time(NULL)));
   initial_info();
 }
 
