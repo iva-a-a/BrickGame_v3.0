@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 GameInfo_t *get_GameInfo() {
   static GameInfo_t Info;
@@ -9,7 +10,7 @@ GameInfo_t *get_GameInfo() {
 }
 
 void setup_game(Game_tetris *tetris) {
-  srand(time(NULL));
+  srand((unsigned int)time(NULL));
   initial_info(tetris);
 }
 
