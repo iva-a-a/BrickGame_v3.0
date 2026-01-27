@@ -88,7 +88,7 @@ typedef struct {
  *
  * @return возвращает время в миллисекундах
  */
-inline long long int time_in_millisec() {
+static inline long long int time_in_millisec(void) {
   struct timeval tv;
   gettimeofday(&tv, NULL);
   return (((long long int)tv.tv_sec) * 1000) + (tv.tv_usec / 1000);
