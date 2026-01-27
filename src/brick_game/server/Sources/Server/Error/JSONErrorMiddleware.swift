@@ -7,6 +7,7 @@
 
 
 import Vapor
+import GameCore
 
 struct JSONErrorMiddleware: AsyncMiddleware {
     func respond(to request: Request, chainingTo next: any AsyncResponder) async throws -> Response {

@@ -7,7 +7,7 @@
 
 import Vapor
 
-enum BrickGameError: Error {
+public enum BrickGameError: Error {
     case gameNotFound(Int)          // 404
     case gameAlreadyRunning         // 409
     case noGameSelected             // 400
@@ -15,7 +15,7 @@ enum BrickGameError: Error {
     case internalFailure(String)    // 500
 }
 
-extension BrickGameError {
+public extension BrickGameError {
     var status: HTTPResponseStatus {
         switch self {
         case .gameNotFound: return .notFound
@@ -35,3 +35,4 @@ extension BrickGameError {
         }
     }
 }
+

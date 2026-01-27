@@ -32,7 +32,7 @@ enum StaticFilesConfigurator {
         }
 
         let root = URL(fileURLWithPath: app.directory.workingDirectory, isDirectory: true)
-            .appendingPathComponent("../..", isDirectory: true)
+            .appendingPathComponent("../", isDirectory: true)
             .standardizedFileURL
 
         return root
