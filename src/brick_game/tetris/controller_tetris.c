@@ -1,6 +1,6 @@
 #include "controller_tetris.h"
 
-void userInput(UserAction_t action, bool hold) {
+void tetris_userInput(UserAction_t action, bool hold) {
   GameInfo_t *info = get_GameInfo();
   int *state = &info->pause;
 
@@ -35,7 +35,7 @@ void userInput(UserAction_t action, bool hold) {
   }
 }
 
-GameInfo_t updateCurrentState() {
+GameInfo_t tetris_updateCurrentState() {
   GameInfo_t *info = get_GameInfo();
   return *info;
 }

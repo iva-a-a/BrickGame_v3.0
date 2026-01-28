@@ -53,7 +53,7 @@ void TetrisWidget::keyPressEvent(QKeyEvent *key) {
 
   GameInfo_t *info = get_GameInfo();
   info->pause = (int)_game.state;
-  userInput(act, false);
+  tetris_userInput(act, false);
   _game.state = (GameState_t)info->pause;
   if (_game.state == Exit) {
     this->close();
@@ -66,7 +66,7 @@ void TetrisWidget::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   setup_painter(p);
   update_game(&_game);
-  GameInfo_t info = updateCurrentState();
+  GameInfo_t info = tetris_updateCurrentState();
   GameState_t state = _game.state;
 
   if (state != Begin) {

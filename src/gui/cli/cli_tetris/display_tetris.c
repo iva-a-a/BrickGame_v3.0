@@ -51,10 +51,10 @@ void game_tetris() {
   while (tetris.state != Exit) {
     GameInfo_t *info = get_GameInfo();
     info->pause = (int)tetris.state;
-    userInput(input_key(), false);
+    tetris_userInput(input_key(), false);
     tetris.state = (GameState_t)info->pause;
     update_game(&tetris);
-    GameInfo_t info_tetris = updateCurrentState();
+    GameInfo_t info_tetris = tetris_updateCurrentState();
     printCurrentState(&info_tetris);
     free_gameinfo(&info_tetris);
   }

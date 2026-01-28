@@ -12,7 +12,7 @@ extern "C" {
  *
  * @return возвращает структуру, содержащую информацию о текущем состоянии игры
  */
-GameInfo_t updateCurrentState();
+GameInfo_t tetris_updateCurrentState();
 
 /**
  * @brief обработка нажатия кнопки
@@ -20,7 +20,7 @@ GameInfo_t updateCurrentState();
  * @param action пользовательское действие
  * @param hold зажатие клавиши
  */
-void userInput(UserAction_t action, bool hold);
+void tetris_userInput(UserAction_t action, bool hold);
 
 #ifdef __cplusplus
 }
