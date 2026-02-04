@@ -18,9 +18,17 @@ let package = Package(
         .target(
             name: "GameCore",
             dependencies: [
-                .product(name: "Vapor", package: "vapor"),
+                .target(name: "TetrisCLib"),
+                .target(name: "SnakeCPPLib"),
+                .target(name: "BrickGameAPI")
             ],
             path: "server/Sources/GameCore",
+            swiftSettings: swiftSettings
+        ),
+        
+        .target(
+            name: "BrickGameAPI",
+            path: "api/BrickGameAPI",
             swiftSettings: swiftSettings
         ),
         
@@ -53,22 +61,13 @@ let package = Package(
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "Race", package: "Race"),
                 .target(name: "GameCore"),
+                .target(name: "BrickGameAPI"),
                 .target(name: "TetrisCLib"),
                 .target(name: "SnakeCPPLib")
             ],
             path: "server/Sources/Server",
             swiftSettings: swiftSettings
         ),
-        
-        .testTarget(
-            name: "ServerTests",
-            dependencies: [
-                .target(name: "Server"),
-                .product(name: "VaporTesting", package: "vapor"),
-            ],
-            path: "server/Tests/ServerTests",
-            swiftSettings: swiftSettings
-        )
     ]
 )
 
