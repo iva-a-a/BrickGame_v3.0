@@ -1,7 +1,6 @@
 import Vapor
 
 func routes(_ app: Application) throws {
-    let store = BrickGameSessionStore()
-    let service = BrickGameService(store: store)
+    let service = BrickGameService()
     try app.register(collection: BrickGameController(service: service))
 }

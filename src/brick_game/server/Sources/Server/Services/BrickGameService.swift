@@ -5,35 +5,46 @@
 //  Created by Alena Ivanova on 20.01.2026.
 //
 
+import Vapor
 import GameCore
+import BrickGameAPI
 
-struct BrickGameService: BrickGameServicing {
-    let store: BrickGameSessionStore
+actor BrickGameService: BrickGameServicing {
+    private var selectedGame: AvailableGame?
+    private var engine: (any BrickGameEngine)?
 
-    func listGames() -> GameList {
-        let games = AvailableGame.allCases.map { GameInfo(id: $0.rawValue, name: $0.name) }
-        return GameList(games: games)
+    func listGames() async -> GameList {
+        GameList(games: AvailableGame.allCases.map { GameInfo(id: $0.rawValue, name: $0.name) })
     }
 
-    func selectGame(gameId: Int) async throws {
-        guard let game = AvailableGame(rawValue: gameId) else {
-            throw BrickGameError.gameNotFound(gameId)
+    func selectGame(id: Int) async throws {
+        guard let game = AvailableGame(rawValue: id) else {
+            throw BrickGameError.gameNotFound(id)
         }
-
-        let currentId = await store.currentId()
-        if let currentId, currentId != gameId {
+        if let selected = selectedGame, selected != game {
             throw BrickGameError.gameAlreadyRunning
         }
 
-        let engine = try EngineFactory.make(game)
-        await store.set(gameId: gameId, engine: engine)
+        if engine == nil {
+            engine = EngineFactory.make(game)
+        }
+
+        selectedGame = game
     }
 
-    func postAction(_ action: UserAction) async throws {
-        try await store.postUserAction(action)
+    func performAction(_ action: UserAction) async throws {
+        guard let engine else { throw BrickGameError.noGameSelected }
+
+        // Валидация action_id по твоему enum (Start=10 ... None=18)
+        guard (10...18).contains(action.actionId) else {
+            throw BrickGameError.invalidAction("Unknown action_id=\(action.actionId)")
+        }
+
+        engine.userInput(actionId: action.actionId, hold: action.hold)
     }
 
-    func getState() async throws -> GameState {
-        return try await store.getGameState()
+    func currentState() async throws -> GameState {
+        guard let engine else { throw BrickGameError.noGameSelected }
+        return engine.getState()
     }
 }
