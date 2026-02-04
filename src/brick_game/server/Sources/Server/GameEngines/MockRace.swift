@@ -7,14 +7,6 @@
 
 import GameCore
 
-struct MockTetrisEngine: BrickGameEngine {
-    func userInput(actionId: Int, hold: Bool) {}
-    func getState() -> GameState { sampleState() }
-}
-struct MockSnakeEngine: BrickGameEngine {
-    func userInput(actionId: Int, hold: Bool) {}
-    func getState() -> GameState { sampleState() }
-}
 struct MockRaceEngine: BrickGameEngine {
     func userInput(actionId: Int, hold: Bool) {}
     func getState() -> GameState { sampleState() }
