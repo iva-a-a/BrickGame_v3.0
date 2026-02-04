@@ -13,7 +13,7 @@ final class RaceGame {
   )
   private var info = GameInfo()
   private var fsm = RaceFSM()
-  private var engine = RaceEngine()
+  private var engine = RaceGameplay()
 
   func userInput(action: Action, hold: Bool) {
     // Up (hold) controls acceleration in running

@@ -1,11 +1,11 @@
 //
-//  RaceEngine.swift
+//  RaceGameplay.swift
 //  Race
 //
 //  Created by Alena Ivanova on 12.01.2026.
 //
 
-struct RaceEngine {
+struct RaceGameplay {
     func isCollision(world: RaceWorld) -> Bool {
         let playerTop = world.playerCar.topY
         let playerBottom = world.playerCar.topY + GameConstants.Car.height - 1
