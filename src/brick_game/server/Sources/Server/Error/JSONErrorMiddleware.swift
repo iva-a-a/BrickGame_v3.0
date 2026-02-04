@@ -7,7 +7,7 @@
 
 
 import Vapor
-import GameCore
+import BrickGameAPI
 
 struct JSONErrorMiddleware: AsyncMiddleware {
     func respond(to request: Request, chainingTo next: any AsyncResponder) async throws -> Response {
