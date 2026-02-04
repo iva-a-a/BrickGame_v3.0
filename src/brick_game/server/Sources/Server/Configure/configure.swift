@@ -1,7 +1,7 @@
 import Vapor
 import Foundation
 
-public func configure(_ app: Application) async throws {
+func configure(_ app: Application) async throws {
     app.middleware.use(JSONErrorMiddleware())
 
     try StaticFilesConfigurator.configure(app)
