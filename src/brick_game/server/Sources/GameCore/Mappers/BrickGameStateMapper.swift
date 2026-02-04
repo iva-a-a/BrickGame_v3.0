@@ -6,7 +6,6 @@
 //
 
 import TetrisCLib
-import GameCore
 import BrickGameAPI
 
 enum BrickGameStateMapper {
