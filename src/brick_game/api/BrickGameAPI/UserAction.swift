@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UserAction: Codable {
+public struct UserAction: Codable, Sendable {
     public let actionId: Int
     public let hold: Bool
 

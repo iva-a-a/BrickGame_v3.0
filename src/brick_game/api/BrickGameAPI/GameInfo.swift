@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GameInfo: Codable {
+public struct GameInfo: Codable, Sendable {
     public let id: Int
     public let name: String
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GameList: Codable {
+public struct GameList: Codable, Sendable {
     public let games: [GameInfo]
     
     public init(games: [GameInfo]) {

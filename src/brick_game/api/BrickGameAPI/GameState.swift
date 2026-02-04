@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GameState: Codable {
+public struct GameState: Codable, Sendable {
     public let field: [[Bool]]
     public let next: [[Bool]]
     public let score: Int
