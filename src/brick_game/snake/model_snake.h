@@ -7,177 +7,72 @@
 #include "../defines.h"
 #include "../struct.h"
 
-/**
- * @enum Direction
- * @brief направление движения змейки
- */
+
 enum class Direction {
-  Up,    /**< движение вверх*/
-  Down,  /**< движение вниз*/
-  Right, /**< движение вправо*/
-  Left   /**< движение влево*/
+  Up,
+  Down,
+  Right,
+  Left
 };
 
-/**
- * @struct Coordinate
- * @brief координаты на игровом поле
- */
 struct Coordinate {
-  int x; /**< Координата x */
-  int y; /**< Координата y */
-  /**
-   * @brief проверка равенства координат
-   * @param a координата для сравнения
-   * @return true, если координаты равны, иначе false
-   */
+  int x;
+  int y;
+
   bool eq_coordinate(const Coordinate &a) const {
     return (x == a.x && y == a.y);
   }
-  /**
-   * @brief перегрузка оператора ==
-   * @param a координата для сравнения
-   * @return true, если координаты равны, иначе false
-   */
+
   bool operator==(const Coordinate &a) const { return eq_coordinate(a); }
 };
 
-/**
- * @class SnakeGame
- * @brief основной класс для игры "Змейка"
- */
+
 class SnakeGame {
- private:
-  Direction dir;              /**< направление движения змейки*/
-  GameState_t state;          /**< состояние игры */
-  UserAction_t currentAction; /**< текущее действие игрока */
-  long long int prev_time;    /**< предыдущее время падения фигуры */
+public:
+    SnakeGame();
+    ~SnakeGame() = default;
+    
+    void set_state(GameState_t state);
+    void set_currAction(UserAction_t currentAction);
+    GameState_t get_state() const;
+    UserAction_t get_currAction();
+    std::list<Coordinate> &get_snake();
+    Coordinate get_apple();
+    int get_score();
+    int get_high_score();
+    int get_level();
+    int get_speed();
+    
+    void move_snake();
+    void update();
 
-  int s_high_score; /**< количество рекордных очков */
-  int s_level;      /**< номер уровня */
-  int s_speed;      /**< скорость движения змейки */
+private:
+    std::list<Coordinate> snake;
+    Coordinate apple;
+    
+    int s_score;
+    Direction dir;
+    GameState_t state;
+    UserAction_t currentAction;
+    long long int prev_time;
+    
+    int s_high_score;
+    int s_level;
+    int s_speed;
+    
+    void set_prev_time(long long int time);
 
- protected:
-  std::list<Coordinate> snake; /**< список координат змейки */
-  int s_score;                 /**< количество очков */
-  Coordinate apple;            /**< Координаты яблока */
- public:
-  /**
-   * @brief конструктор класса SnakeGame
-   */
-  SnakeGame();
-  /**
-   * @brief деструктор класса SnakeGame
-   */
-  ~SnakeGame() = default;
+    void put_apple();
+    void create_snake();
 
-  /**
-   * @brief установка состояния игры
-   * @param state новое состояние игры
-   */
-  void set_state(GameState_t state);
-  /**
-   * @brief установка текущего действия игрока
-   * @param currentAction новое действие игрока
-   */
-  void set_currAction(UserAction_t currentAction);
-  /**
-   * @brief установка предыдущего времени
-   * @param time новое значение времени
-   */
-  void set_prev_time(long long int time);
-  /**
-   * @brief получение текущего состояние игры
-   * @return текущее состояние игры
-   */
-  GameState_t get_state() const;
-  /**
-   * @brief получение текущего действие игрока
-   * @return текущее действие игрока
-   */
-  UserAction_t get_currAction();
-  /**
-   * @brief получение ссылки на список координат змейки
-   * @return список координат змейки
-   */
-  std::list<Coordinate> &get_snake();
-  /**
-   * @brief получение координат яблока
-   * @return координаты яблока
-   */
-  Coordinate get_apple();
-  /**
-   * @brief получение количества очков
-   * @return количество очков
-   */
-  int get_score();
-  /**
-   * @brief получение рекордного количества очков
-   * @return рекордное количество очков
-   */
-  int get_high_score();
-  /**
-   * @brief получение уровня игры
-   * @return уровень игры
-   */
-  int get_level();
-  /**
-   * @brief получение скорости игры
-   * @return скорость игры
-   */
-  int get_speed();
+    Coordinate snake_head_new_pos();
+    void check_move_snake();
+    void change_direction(UserAction_t currentAction);
+    bool collision(const Coordinate &pos);
+    void increase_level();
 
-  /**
-   * @brief сброс параметров игры
-   */
-  void clearing_game();
-  /**
-   * @brief инициализирует параметры игры
-   */
-  void initial_info();
-  /**
-   * @brief размещение яблока на игровом поле
-   */
-  void put_apple();
-  /**
-   * @brief создание начальной позиции змейки
-   */
-  void create_snake();
+    void save_high_score();
 
-  /**
-   * @brief вычисление новой позиции головы змейки
-   * @return новая позиция головы змейки
-   */
-  Coordinate snake_head_new_pos();
-  /**
-   * @brief проверка на столкновение с заданной позицией
-   * @param pos координаты позиции для проверки
-   * @return true, если произошла коллизия, иначе false
-   */
-  bool collision(const Coordinate &pos);
-  /**
-   * @brief проверка возможности движения змейки
-   */
-  void check_move_snake();
-  /**
-   * @brief движение змейку
-   */
-  void move_snake();
-  /**
-   * @brief изменение направления движения змейки по действию игрока
-   * @param currentAction действие игрока
-   */
-  void change_direction(UserAction_t currentAction);
-  /**
-   * @brief повышение уровня игры
-   */
-  void increase_level();
-  /**
-   * @brief сохранение рекордных очков
-   */
-  void save_high_score();
-
-  /**
-   * @brief обновляет игры
-   */
-  void update();
+    void clearing_game();
+    void initial_info();
 };
