@@ -1,18 +1,18 @@
 #include "display.h"
 
 void setup_gui() {
-  initscr();             /*инициализация ncurses*/
-  curs_set(0);           /*скрыть курсор*/
-  noecho();              /*отключить вывод введенных символов на экран*/
-  keypad(stdscr, TRUE);  /*включить обработку функциональных клавиш*/
-  nodelay(stdscr, TRUE); /*неблокирующее считывание клавиш*/
+  initscr();
+  curs_set(0);
+  noecho();
+  keypad(stdscr, TRUE);
+  nodelay(stdscr, TRUE);
 }
 
-void delete_gui() { endwin(); /*завершение работы с ncurses*/ }
+void delete_gui() { endwin(); }
 
 UserAction_t input_key() {
   UserAction_t return_key;
-  int key = getch(); /*считываем клавишу с клавиатуры*/
+  int key = getch();
   switch (key) {
     case KEY_DOWN:
       return_key = Down;
@@ -23,19 +23,19 @@ UserAction_t input_key() {
     case KEY_RIGHT:
       return_key = Right;
       break;
-    case 10: /*enter - начало игры*/
+    case 10:
       return_key = Start;
       break;
     case 263: /*backspace - пауза*/
       return_key = Pause;
       break;
-    case 27: /*esc - завершение игры*/
+    case 27:
       return_key = Terminate;
       break;
-    case 32: /*пробел - движение (поворот фигуры)*/
+    case 32:
       return_key = Action;
       break;
-    case KEY_UP: /*пробел - движение (поворот фигуры)*/
+    case KEY_UP:
       return_key = Up;
       break;
     default:
@@ -78,7 +78,7 @@ void print_game_board() {
       }
     }
   }
-  mvprintw(10, 13, "%*c", 8, ' '); /*стираем стартовую заставку*/
+  mvprintw(10, 13, "%*c", 8, ' ');
 }
 
 void print_start() {
