@@ -8,14 +8,12 @@ class SnakeDisplay {
   Controller *controller;
 
  public:
-
   explicit SnakeDisplay(Controller *c);
 
   ~SnakeDisplay() = default;
 
   void print_win();
+  void printCurrentState(GameInfo_t &info);
 
   void game_snake();
-
-  void printCurrentState(GameInfo_t &info);
 };
