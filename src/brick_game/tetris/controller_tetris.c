@@ -1,41 +1,32 @@
 #include "controller_tetris.h"
 
 void tetris_userInput(UserAction_t action, bool hold) {
-  GameInfo_t *info = get_GameInfo();
-  int *state = &info->pause;
-
-  if (action == Start && *state == Begin) {
-    *state = Generation;
-  } else if (*state == Falling) {
-    if (action == Pause) {
-      *state = Break;
-    } else if (action == Left && !hold) {
-      *state = Moving_left;
-    } else if (action == Right && !hold) {
-      *state = Moving_right;
-    } else if (action == Down) {
-      *state = Moving_down;
-    } else if (action == Action) {
-      *state = Moving_rotate;
-    } else if (action == Terminate) {
-      *state = End;
-    }
-  } else if (*state == Break) {
-    if (action == Pause) {
-      *state = Falling;
-    } else if (action == Terminate) {
-      *state = End;
-    }
-  } else if (*state == End) {
-    if (action == Start) {
-      *state = Begin;
-    } else if (action == Terminate) {
-      *state = Exit;
-    }
-  }
+    (void)hold;
+    Game_tetris *tetris = get_ptr_game_tetris();
+    fsm(tetris, action);
 }
 
 GameInfo_t tetris_updateCurrentState() {
-  GameInfo_t *info = get_GameInfo();
-  return *info;
+  Game_tetris *tetris = get_ptr_game_tetris();
+
+  if (!tetris->is_init) {
+    setup_game(tetris);
+    tetris->is_init = true;
+  }
+
+  update_game(tetris);
+
+  free_matrix(tetris->render_field, ROWS_BOARD);
+  tetris->render_field = build_render_field(tetris);
+
+  GameInfo_t info = (GameInfo_t){0};
+  info.field = tetris->render_field;
+  info.next = tetris->next;
+  info.score = tetris->score;
+  info.high_score = tetris->high_score;
+  info.level = tetris->level;
+  info.speed = tetris->speed;
+  info.pause = (tetris->state == Break);
+
+  return info;
 }

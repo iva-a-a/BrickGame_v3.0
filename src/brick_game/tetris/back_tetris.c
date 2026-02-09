@@ -4,11 +4,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-GameInfo_t *get_GameInfo() {
-  static GameInfo_t Info;
-  return &Info;
-}
-
 void setup_game(Game_tetris *tetris) {
   srand((unsigned int)time(NULL));
   initial_info(tetris);
@@ -43,35 +38,21 @@ void initial_info(Game_tetris *tetris) {
 }
 
 void free_info(Game_tetris *tetris) {
-  if (tetris->field) {
-    for (int i = 0; i < ROWS_BOARD; i++) {
-      free(tetris->field[i]);
-    }
-    free(tetris->field);
-  }
-  if (tetris->next) {
-    for (int i = 0; i < ROWS_FIGURE; i++) {
-      free(tetris->next[i]);
-    }
-    free(tetris->next);
-  }
-  if (tetris->now) {
-    for (int i = 0; i < ROWS_FIGURE; i++) {
-      free(tetris->now[i]);
-    }
-    free(tetris->now);
-  }
+  free_matrix(tetris->field, ROWS_BOARD);
+  free_matrix(tetris->next, ROWS_FIGURE);
+  free_matrix(tetris->now, ROWS_FIGURE);
+  free_matrix(tetris->render_field, ROWS_BOARD);
 }
 
 void clearing_game(Game_tetris *tetris) {
   clear_mat(tetris->field, ROWS_BOARD, COL_BOARD);
   clear_mat(tetris->next, ROWS_FIGURE, COL_FIGURE);
+  clear_mat(tetris->now, ROWS_FIGURE, COL_FIGURE);
+  clear_mat(tetris->render_field, ROWS_BOARD, COL_BOARD);
 
   tetris->score = 0;
   tetris->level = 1;
   tetris->speed = 1000;
-
-  clear_mat(tetris->now, ROWS_FIGURE, COL_FIGURE);
 
   tetris->x = COL_BOARD / 2 - COL_FIGURE / 2;
   tetris->y = 0;
@@ -95,7 +76,7 @@ void fall_figure(Game_tetris *tetris) {
   long long int time = time_in_millisec();
   if (time - tetris->prev_time > tetris->speed) {
     tetris->y++;
-    if (collision(tetris) != 0) {
+    if (collision(tetris)) {
       tetris->y--;
       tetris->state = Attaching;
     }
@@ -122,7 +103,7 @@ void rotate_figure(Game_tetris *tetris) {
         tetris->now[i][j] = tmp[i][size - j - 1];
       }
     }
-    if (collision(tetris) != 0) {
+    if (collision(tetris)) {
       for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
           tetris->now[j][i] = tmp[i][j];
@@ -133,18 +114,18 @@ void rotate_figure(Game_tetris *tetris) {
 }
 
 void move_figure(Game_tetris *tetris, UserAction_t key) {
-  if (key == Left) { /*влево*/
+  if (key == Left) {
     tetris->x--;
-    if (collision(tetris) != 0) {
+    if (collision(tetris)) {
       tetris->x++;
     }
-  } else if (key == Right) { /*вправо*/
+  } else if (key == Right) {
     tetris->x++;
-    if (collision(tetris) != 0) {
+    if (collision(tetris)) {
       tetris->x--;
     }
-  } else if (key == Down) { /*вниз*/
-    while (collision(tetris) == 0) {
+  } else if (key == Down) {
+    while (!collision(tetris)) {
       tetris->y++;
     }
     tetris->y--;
@@ -218,16 +199,16 @@ void increase_level(Game_tetris *tetris) {
   }
 }
 
-int collision(Game_tetris *tetris) {
-  int is_col = 0;
+bool collision(Game_tetris *tetris) {
+  bool is_col = false;
   for (int i = 0; i < ROWS_FIGURE; i++) {
     for (int j = 0; j < COL_FIGURE; j++) {
       if (tetris->now[i][j] != 0) {
         int x = tetris->x + j, y = tetris->y + i;
         if (x < 0 || x >= COL_BOARD || y >= ROWS_BOARD || y < 0) {
-          is_col = 1; /*касание с краями поля*/
+          is_col = true;
         } else if (tetris->field[y][x] != 0) {
-          is_col = 2; /*касание с фигурой на поле*/
+          is_col = true;
         }
       }
     }
@@ -264,7 +245,7 @@ void update_game(Game_tetris *tetris) {
     tetris->prev_time = time_in_millisec();
     copy_figures(tetris);
     gen_rand_figure(tetris);
-    if (collision(tetris) == 0) {
+    if (!collision(tetris)) {
       tetris->state = Falling;
     } else {
       tetris->state = End;
@@ -290,113 +271,80 @@ void update_game(Game_tetris *tetris) {
     save_high_score(tetris);
     tetris->state = Generation;
   }
+}
 
-  GameInfo_t *info = get_GameInfo();
-  if (info) {
-    info->field = tetris->field;
-
-    if (tetris->state != End) {
-      int **t_now = convert_matrix(tetris->now, ROWS_FIGURE, COL_FIGURE,
-                                   tetris->y, tetris->x);
-      set_color_third_elem(t_now, tetris->number_now_f + 1);
-      int **t_next =
-          convert_matrix(tetris->next, ROWS_FIGURE, COL_FIGURE, 1, 12);
-      set_color_third_elem(t_next, tetris->number_next_f + 1);
-
-      info->next = join_matrix(t_next, t_now);
-    } else {
-      int **t_now = convert_matrix(tetris->now, ROWS_FIGURE, COL_FIGURE, 1, 12);
-      set_color_third_elem(t_now, tetris->number_now_f + 1);
-      info->next = t_now;
+void fsm(Game_tetris *tetris, UserAction_t action) {
+  if (action == Start && tetris->state == Begin) {
+      tetris->state = Generation;
+  } else if (tetris->state == Falling) {
+    if (action == Pause) {
+        tetris->state = Break;
+    } else if (action == Left) {
+        tetris->state = Moving_left;
+    } else if (action == Right) {
+        tetris->state = Moving_right;
+    } else if (action == Down) {
+        tetris->state = Moving_down;
+    } else if (action == Action) {
+        tetris->state = Moving_rotate;
+    } else if (action == Terminate) {
+        tetris->state = End;
     }
-    info->score = tetris->score;
-    info->high_score = tetris->high_score;
-    info->level = tetris->level;
-    info->speed = tetris->speed;
+  } else if (tetris->state == Break) {
+    if (action == Pause) {
+        tetris->state = Falling;
+    } else if (action == Terminate) {
+        tetris->state= End;
+    }
+  } else if (tetris->state == End) {
+    if (action == Start) {
+        tetris->state = Begin;
+    } else if (action == Terminate) {
+        tetris->state = Exit;
+    }
   }
 }
 
-void set_color_third_elem(int **arr, int color) {
-  int i = 0;
-  while (arr[i][0] != -1 && arr[i][1] != -1 && arr[i][2] != -1) {
-    arr[i][2] = color;
-    i++;
-  }
+Game_tetris *get_ptr_game_tetris() {
+  static Game_tetris tetris = {0};
+  return &tetris;
 }
 
-int **convert_matrix(int **arr1, int row, int col, int x, int y) {
-  int count = 0;
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) {
-      if (arr1[i][j] == 1) {
-        count++;
+int **build_render_field(Game_tetris *t) {
+
+    int **rf = (int **)malloc(sizeof(int *) * ROWS_BOARD);
+    for (int i = 0; i < ROWS_BOARD; i++) {
+      rf[i] = (int *)calloc(sizeof(int), COL_BOARD);
+    }
+
+  for (int i = 0; i < ROWS_BOARD; i++) {
+    for (int j = 0; j < COL_BOARD; j++) {
+      rf[i][j] = t->field[i][j];
+    }
+  }
+
+  for (int i = 0; i < ROWS_FIGURE; i++) {
+    for (int j = 0; j < COL_FIGURE; j++) {
+      if (t->now[i][j] == 0) continue;
+
+      int fy = t->y + i;
+      int fx = t->x + j;
+
+      if (fy >= 0 && fy < ROWS_BOARD &&
+          fx >= 0 && fx < COL_BOARD) {
+        rf[fy][fx] = t->number_now_f + 1;
       }
     }
   }
-  int **mat = (int **)malloc((count + 1) * sizeof(int *));
-  int k = 0;
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) {
-      if (arr1[i][j] == 1) {
-        mat[k] = (int *)malloc(3 * sizeof(int));
-        mat[k][0] = i + x;
-        mat[k][1] = j + y;
-        mat[k][2] = 0;
-        k++;
-      }
-    }
-  }
-  mat[k] = (int *)malloc(3 * sizeof(int));
-  mat[k][0] = -1;
-  mat[k][1] = -1;
-  mat[k][2] = -1;
-  return mat;
+
+  return rf;
 }
 
-int **join_matrix(int **arr1, int **arr2) {
-  int i = 0;
-  int count = 0;
-  while (arr1[i][0] != -1 && arr1[i][1] != -1 && arr1[i][2] != -1) {
-    i++;
-    count++;
-  }
-  i = 0;
-  while (arr2[i][0] != -1 && arr2[i][1] != -1 && arr2[i][2] != -1) {
-    i++;
-    count++;
-  }
-  int **mat = (int **)malloc((count + 1) * sizeof(int *));
-  i = 0;
-  int j = 0;
-  while (arr1[i][0] != -1 && arr1[i][1] != -1 && arr1[i][2] != -1) {
-    mat[j] = arr1[i];
-    i++;
-    j++;
-  }
-  free(arr1[i]);
-  i = 0;
-  while (arr2[i][0] != -1 && arr2[i][1] != -1 && arr2[i][2] != -1) {
-    mat[j] = arr2[i];
-    i++;
-    j++;
-  }
-  mat[j] = arr2[i];
-
-  free(arr1);
-  free(arr2);
-  return mat;
-}
-
-void free_matrix(int **arr) {
+void free_matrix(int **arr, int rows) {
   if (arr) {
-    size_t i = 0;
-    while (arr[i][0] != -1 && arr[i][1] != -1 && arr[i][2] != -1) {
+    for (int i = 0; i < rows; i++) {
       free(arr[i]);
-      i++;
     }
-    free(arr[i]);
     free(arr);
   }
 }
-
-void free_gameinfo(GameInfo_t *info) { free_matrix(info->next); }

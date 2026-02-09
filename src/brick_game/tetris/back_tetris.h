@@ -24,15 +24,30 @@ typedef struct {
   int level;
   int speed;
   GameState_t state;
-} Game_tetris;
 
-GameInfo_t *get_GameInfo();
+  bool is_init;
+  GameInfo_t info;
+
+  int **render_field;
+} Game_tetris;
 
 void setup_game(Game_tetris *tetris);
 
 void initial_info(Game_tetris *tetris);
 
 void free_info(Game_tetris *tetris);
+
+void clear_mat(int **matrix, int x, int y);
+
+void clearing_game(Game_tetris *tetris);
+
+
+void fsm(Game_tetris *tetris, UserAction_t action);
+
+Game_tetris *get_ptr_game_tetris();
+
+void update_game(Game_tetris *tetris);
+
 
 void gen_rand_figure(Game_tetris *tetris);
 
@@ -46,31 +61,21 @@ void rotate_figure(Game_tetris *tetris);
 
 void move_figure(Game_tetris *tetris, UserAction_t key);
 
-int collision(Game_tetris *tetris);
-
-void copy_figures(Game_tetris *tetris);
+bool collision(Game_tetris *tetris);
 
 void scoring_points(Game_tetris *tetris, int count);
 
 void increase_level(Game_tetris *tetris);
 
+
 void save_high_score(Game_tetris *tetris);
 
-void clear_mat(int **matrix, int x, int y);
 
-void clearing_game(Game_tetris *tetris);
+void copy_figures(Game_tetris *tetris);
 
-void update_game(Game_tetris *tetris);
+int **build_render_field(Game_tetris *t);
 
-int **convert_matrix(int **arr1, int row, int col, int x, int y);
-
-void set_color_third_elem(int **arr, int color);
-
-int **join_matrix(int **arr1, int **arr2);
-
-void free_matrix(int **arr);
-
-void free_gameinfo(GameInfo_t *info);
+void free_matrix(int **arr, int rows);
 
 #ifdef __cplusplus
 }
