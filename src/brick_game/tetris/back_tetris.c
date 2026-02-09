@@ -48,8 +48,9 @@ void clearing_game(Game_tetris *tetris) {
   clear_mat(tetris->field, ROWS_BOARD, COL_BOARD);
   clear_mat(tetris->next, ROWS_FIGURE, COL_FIGURE);
   clear_mat(tetris->now, ROWS_FIGURE, COL_FIGURE);
-  clear_mat(tetris->render_field, ROWS_BOARD, COL_BOARD);
-
+    if (tetris->render_field) {
+        clear_mat(tetris->render_field, ROWS_BOARD, COL_BOARD);
+    }
   tetris->score = 0;
   tetris->level = 1;
   tetris->speed = 1000;
