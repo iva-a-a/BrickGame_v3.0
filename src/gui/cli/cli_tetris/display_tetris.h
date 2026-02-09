@@ -8,14 +8,6 @@
 extern "C" {
 #endif
 
-void print_stats_tetris();
-
-void print_fallfigure(int **arr, int row, int col);
-
-void clear_next_figure();
-
-void printCurrentState(GameInfo_t *info);
-
 void game_tetris();
 
 #ifdef __cplusplus
