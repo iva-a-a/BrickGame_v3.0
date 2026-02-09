@@ -26,7 +26,8 @@ UserAction_t input_key() {
     case 10:
       return_key = Start;
       break;
-    case 263: /*backspace - пауза*/
+    case 'p':
+    case 'P':
       return_key = Pause;
       break;
     case 27:
@@ -96,7 +97,7 @@ void print_stats_ban() {
   mvprintw(11, 27, "SCORE");
   mvprintw(14, 27, "HIGH SCORE");
   mvprintw(17, 24, "ESC - exit");
-  mvprintw(18, 24, "BACKSPACE - pause");
+  mvprintw(18, 24, "\'P\' - pause");
   mvprintw(19, 24, "ARROWS - move");
 }
 
@@ -106,6 +107,7 @@ void print_pause() {
   mvprintw(11, 0, "%*c", 22, ' ');
 }
 
+// проверить стирание рестарта
 void print_game_over() {
   mvprintw(9, 0, "%*c", 22, ' ');
   mvprintw(10, 0, "      GAME OVER!      ");
@@ -113,6 +115,7 @@ void print_game_over() {
   mvprintw(21, 24, "ENTER - restart");
 }
 
+// мб не нужно 
 void print_arr(int **arr) {
   if (arr != NULL) {
     size_t i = 0;
