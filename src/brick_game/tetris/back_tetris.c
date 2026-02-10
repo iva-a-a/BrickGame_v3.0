@@ -16,20 +16,21 @@ static void gen_rand_figure(Game_tetris *tetris) {
 }
 
 static bool collision(Game_tetris *tetris) {
-  bool is_col = false;
   for (int i = 0; i < ROWS_FIGURE; i++) {
     for (int j = 0; j < COL_FIGURE; j++) {
-      if (tetris->now[i][j] != 0) {
-        int x = tetris->x + j, y = tetris->y + i;
-        if (x < 0 || x >= COL_BOARD || y >= ROWS_BOARD || y < 0) {
-          is_col = true;
-        } else if (tetris->field[y][x] != 0) {
-          is_col = true;
-        }
+      if (tetris->now[i][j] == 0) continue;
+      int x = tetris->x + j;
+      int y = tetris->y + i;
+      if (x < 0 || x >= COL_BOARD || y >= ROWS_BOARD) {
+        return true;
+      }
+      if (y < 0) continue;
+      if (tetris->field[y][x] != 0) {
+        return true;
       }
     }
   }
-  return is_col;
+  return false;
 }
 
 static void fall_figure(Game_tetris *tetris) {
@@ -256,11 +257,23 @@ static void copy_figures(Game_tetris *tetris) {
   tetris->number_now_f = tetris->number_next_f;
 }
 
+static int top_offset_now(const Game_tetris *tetris) {
+  for (int i = 0; i < ROWS_FIGURE; i++) {
+    for (int j = 0; j < COL_FIGURE; j++) {
+      if (tetris->now[i][j] != 0) return i;
+    }
+  }
+  return 0;
+}
+
 static void filling_field(Game_tetris *tetris) {
   for (int i = 0; i < ROWS_FIGURE; i++) {
     for (int j = 0; j < COL_FIGURE; j++) {
-      if (tetris->y + i >= 0 && tetris->x + j >= 0 && tetris->now[i][j] == 1) {
-        tetris->field[tetris->y + i][tetris->x + j] = tetris->number_now_f + 1;
+      if (tetris->now[i][j] == 0) continue;
+      int y = tetris->y + i;
+      int x = tetris->x + j;
+      if (y >= 0 && y < ROWS_BOARD && x >= 0 && x < COL_BOARD) {
+        tetris->field[y][x] = tetris->number_now_f + 1;
       }
     }
   }
@@ -278,13 +291,17 @@ void update_game(Game_tetris *tetris) {
 
   if (tetris->state == Generation) {
     tetris->x = COL_BOARD / 2 - COL_FIGURE / 2;
-    tetris->y = 0;
+    tetris->y = -top_offset_now(tetris) - 1;
     tetris->prev_time = time_in_millisec();
     copy_figures(tetris);
-    gen_rand_figure(tetris);
 
-    if (!collision(tetris)) tetris->state = Falling;
-    else tetris->state = End;
+    if (!collision(tetris)) {
+        tetris->state = Falling;
+    } else {
+        clear_mat(tetris->now, ROWS_FIGURE, COL_FIGURE);
+        tetris->state = End;
+    }
+    gen_rand_figure(tetris);
 
   } else if (tetris->state == Falling) {
     fall_figure(tetris);
