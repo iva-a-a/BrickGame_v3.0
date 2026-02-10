@@ -32,6 +32,7 @@ typedef struct {
 } Game_tetris;
 
 void setup_game(Game_tetris *tetris);
+void ensure_init_and_free(Game_tetris *tetris);
 
 void fsm(Game_tetris *tetris, UserAction_t action);
 Game_tetris *get_ptr_game_tetris();

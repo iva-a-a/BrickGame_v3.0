@@ -3,20 +3,15 @@
 void tetris_userInput(UserAction_t action, bool hold) {
   (void)hold;
   Game_tetris *tetris = get_ptr_game_tetris();
-  if (!tetris->is_init) {
-    setup_game(tetris);
-    tetris->is_init = true;
-  }
+  ensure_init_and_free(tetris);
+
   fsm(tetris, action);
 }
 
 GameInfo_t tetris_updateCurrentState() {
   Game_tetris *tetris = get_ptr_game_tetris();
 
-  if (!tetris->is_init) {
-    setup_game(tetris);
-    tetris->is_init = true;
-  }
+  ensure_init_and_free(tetris);
 
   update_game(tetris);
 

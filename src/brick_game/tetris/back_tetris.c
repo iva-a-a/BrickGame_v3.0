@@ -218,11 +218,33 @@ static void free_matrix(int **arr, int rows) {
   }
 }
 
-static void free_info(Game_tetris *tetris) {
+static void free_game() {
+  Game_tetris *tetris = get_ptr_game_tetris();
+  if (!tetris || !tetris->is_init) return;
   free_matrix(tetris->field, ROWS_BOARD);
   free_matrix(tetris->next, ROWS_FIGURE);
   free_matrix(tetris->now, ROWS_FIGURE);
   free_matrix(tetris->render_field, ROWS_BOARD);
+  tetris->field = NULL;
+  tetris->next = NULL;
+  tetris->now = NULL;
+  tetris->render_field = NULL;
+
+  tetris->is_init = false;
+  tetris->state = Begin;
+}
+
+void ensure_init_and_free(Game_tetris *tetris) {
+  static bool free_registered = false;
+
+  if (!tetris->is_init) {
+    setup_game(tetris);
+      tetris->is_init = true;
+  }
+  if (!free_registered) {
+    atexit(free_game);
+    free_registered = true;
+  }
 }
 
 static void copy_figures(Game_tetris *tetris) {
