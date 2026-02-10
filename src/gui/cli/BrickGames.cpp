@@ -1,4 +1,4 @@
-#include "brick_game_cli.h"
+#include "BrickGames.h"
 
 int main() {
   setup_gui();

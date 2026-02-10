@@ -1,4 +1,4 @@
-#include "display_snake.h"
+#include "DisplaySnake.h"
 
 SnakeDisplay::SnakeDisplay(Controller *c) : controller{c} {}
 
