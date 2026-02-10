@@ -99,6 +99,7 @@ void print_stats_ban() {
   mvprintw(17, 24, "ESC - exit");
   mvprintw(18, 24, "\'P\' - pause");
   mvprintw(19, 24, "ARROWS - move");
+  mvprintw(21, 24, "%*c", 20, ' ');
 }
 
 void print_pause() {
@@ -107,7 +108,6 @@ void print_pause() {
   mvprintw(11, 0, "%*c", 22, ' ');
 }
 
-// проверить стирание рестарта
 void print_game_over() {
   mvprintw(9, 0, "%*c", 22, ' ');
   mvprintw(10, 0, "      GAME OVER!      ");
@@ -115,7 +115,7 @@ void print_game_over() {
   mvprintw(21, 24, "ENTER - restart");
 }
 
-// мб не нужно 
+// мб не нужно
 void print_arr(int **arr) {
   if (arr != NULL) {
     size_t i = 0;
@@ -128,8 +128,8 @@ void print_arr(int **arr) {
 
 void print_stats(int level, int speed, int score, int high_score,
                  int begin_speed) {
-  mvprintw(6, 29, "%d", level);
-  mvprintw(9, 29, "%.2f", (float)begin_speed / speed);
-  mvprintw(12, 29, "%d", score);
-  mvprintw(15, 29, "%d", high_score);
+  mvprintw(6, 29, "%-5d", level);
+  mvprintw(9, 29, "%-5.2f", (float)begin_speed / speed);
+  mvprintw(12, 29, "%-10d", score);
+  mvprintw(15, 29, "%-10d", high_score);
 }
