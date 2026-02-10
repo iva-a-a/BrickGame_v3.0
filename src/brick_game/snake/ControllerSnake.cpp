@@ -10,7 +10,3 @@ GameInfo_t Controller::updateCurrentState() {
     SnakeInfo info = model_.getInfo();
     return SnakeInfoConverter::toGameInfo(info);
 }
-
-void Controller::clearGameInfo(GameInfo_t& info) {
-  SnakeInfoConverter::freeGameInfo(info);
-}

@@ -10,11 +10,9 @@
 
 class SnakeInfoConverter {
 public:
-    static GameInfo_t toGameInfo(const SnakeInfo info);
-    static void freeGameInfo(GameInfo_t& info);
+    static GameInfo_t toGameInfo(const SnakeInfo& info);
     
 private:
-    static int **listToArray(std::list<Coordinate> l);
+    static int **listToArray(const std::list<Coordinate>& l);
     static int **coordinateToArray(Coordinate c);
-    static void freeArray(int **array);
 };

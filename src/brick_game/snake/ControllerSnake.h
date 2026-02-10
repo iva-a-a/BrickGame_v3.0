@@ -10,8 +10,6 @@ public:
     
     void userInput(UserAction_t currentAction, bool hold);
     GameInfo_t updateCurrentState();
-    
-    void clearGameInfo(GameInfo_t& info);
 
 private:
     HighScoreStorage storage_;

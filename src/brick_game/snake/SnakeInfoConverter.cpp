@@ -6,86 +6,88 @@
 //
 
 #include "SnakeInfoConverter.h"
+#include "../defines.h"
 
-GameInfo_t SnakeInfoConverter::toGameInfo(const SnakeInfo info) {
+static constexpr int MAX_SNAKE = ROWS_BOARD * COL_BOARD;
+
+static int  g_snake_buf[MAX_SNAKE + 1][3];
+static int* g_snake_rows[MAX_SNAKE + 1];
+
+static int  g_apple_buf[2][3];
+static int* g_apple_rows[2];
+
+static bool g_inited = false;
+
+static void ensure_buffers() {
+    if (g_inited) return;
+
+    for (int i = 0; i < MAX_SNAKE + 1; ++i) {
+        g_snake_rows[i] = g_snake_buf[i];
+    }
+    for (int i = 0; i < 2; ++i) {
+        g_apple_rows[i] = g_apple_buf[i];
+    }
+    g_inited = true;
+}
+
+GameInfo_t SnakeInfoConverter::toGameInfo(const SnakeInfo& info) {
+    ensure_buffers();
+
     GameInfo_t out{};
 
     out.score = info.score;
     out.high_score = info.high_score;
     out.level = info.level;
     out.speed = info.speed;
-    //out.pause = info.pause ? 1 : 0;
-    // КОД ЭКРАНА в out.pause (GameInfo_t не меняем)
-    if (info.score == 1000) {
-      out.pause = 4;                 // WIN (по очкам, как ты просишь)
-    } else if (info.state == Break) {
-      out.pause = 1;                 // PAUSE
-    } else if (info.state == Begin) {
-      out.pause = 2;                 // START SCREEN
-    } else if (info.state == End) {
-      out.pause = 3;                 // GAME OVER
-    } else if (info.state == Exit) {
-      out.pause = 9;                 // EXIT
-    } else {
-      out.pause = 0;                 // RUNNING
-    }
 
-    out.next = listToArray(info.snake);
+    if (info.score == 1000) {
+        out.pause = 4;          // WIN
+    } else if (info.state == Break) {
+        out.pause = 1;          // PAUSE
+    } else if (info.state == Begin) {
+        out.pause = 2;          // START
+    } else if (info.state == End) {
+        out.pause = 3;          // GAME OVER
+    } else if (info.state == Exit) {
+        out.pause = 9;          // EXIT
+    } else {
+        out.pause = 0;          // RUNNING
+    }
+    out.next  = listToArray(info.snake);
     out.field = coordinateToArray(info.apple);
 
     return out;
 }
 
-void SnakeInfoConverter::freeGameInfo(GameInfo_t& info) {
-  freeArray(info.field);
-  freeArray(info.next);
+int **SnakeInfoConverter::listToArray(const std::list<Coordinate>& l) {
+    ensure_buffers();
 
-  info.field = nullptr;
-  info.next = nullptr;
-}
-
-int **SnakeInfoConverter::listToArray(std::list<Coordinate> l) {
-    int **arr = new int *[l.size() + 1];
-    size_t index = 0;
-    for (auto &i : l) {
-      arr[index] = new int[3];
-      arr[index][0] = i.x;
-      arr[index][1] = i.y;
-      arr[index][2] = 0;
-      index++;
+    int idx = 0;
+    for (const auto& c : l) {
+        if (idx >= MAX_SNAKE) break;
+        g_snake_buf[idx][0] = c.x;
+        g_snake_buf[idx][1] = c.y;
+        g_snake_buf[idx][2] = 0;
+        idx++;
     }
-    arr[index] = new int[3];
-    arr[index][0] = -1;
-    arr[index][1] = -1;
-    arr[index][2] = -1;
-    return arr;
+
+    g_snake_buf[idx][0] = -1;
+    g_snake_buf[idx][1] = -1;
+    g_snake_buf[idx][2] = -1;
+
+    return g_snake_rows;
 }
 
 int **SnakeInfoConverter::coordinateToArray(Coordinate c) {
-    int **arr = new int *[2];
-    size_t index = 0;
+    ensure_buffers();
 
-    arr[index] = new int[3];
-    arr[index][0] = c.x;
-    arr[index][1] = c.y;
-    arr[index][2] = 7;
-    index++;
+    g_apple_buf[0][0] = c.x;
+    g_apple_buf[0][1] = c.y;
+    g_apple_buf[0][2] = 7;
 
-    arr[index] = new int[3];
-    arr[index][0] = -1;
-    arr[index][1] = -1;
-    arr[index][2] = -1;
-    return arr;
-}
+    g_apple_buf[1][0] = -1;
+    g_apple_buf[1][1] = -1;
+    g_apple_buf[1][2] = -1;
 
-void SnakeInfoConverter::freeArray(int **array) {
-    if (array != nullptr) {
-      size_t i = 0;
-      while (array[i][0] != -1 && array[i][1] != -1 && array[i][2] != -1) {
-        delete[] array[i];
-        i++;
-      }
-      delete[] array[i];
-      delete[] array;
-    }
+    return g_apple_rows;
 }
