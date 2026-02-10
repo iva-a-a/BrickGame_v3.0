@@ -1,11 +1,11 @@
 //
-//  highscore_storage.cpp
+//  HighScoreStorage.cpp
 //  BrickGame
 //
 //  Created by Alena Ivanova on 10.02.2026.
 //
 
-#include "highscore_storage.h"
+#include "HighScoreStorage.h"
 #include <fstream>
 
 void HighScoreStorage::save(int value) const {

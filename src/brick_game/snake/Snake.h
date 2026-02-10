@@ -1,11 +1,11 @@
 //
-//  snake.h
+//  Snake.h
 //  BrickGame
 //
 //  Created by Alena Ivanova on 10.02.2026.
 //
 #pragma once
-#include "coordinate.h"
+#include "Coordinate.h"
 #include <list>
 
 enum class Direction {

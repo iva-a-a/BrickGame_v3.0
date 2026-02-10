@@ -1,7 +1,7 @@
 #pragma once
 
-#include "model_snake.h"
-#include "highscore_storage.h"
+#include "SnakeGame.h"
+#include "HighScoreStorage.h"
 
 class Controller {
 public:

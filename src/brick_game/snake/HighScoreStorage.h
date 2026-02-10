@@ -1,5 +1,5 @@
 //
-//  highscore_storage.h
+//  HighScoreStorage.h
 //  BrickGame
 //
 //  Created by Alena Ivanova on 10.02.2026.

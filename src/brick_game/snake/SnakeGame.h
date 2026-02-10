@@ -5,9 +5,9 @@
 
 #include "../defines.h"
 //#include "../struct.h"
-#include "highscore_storage.h"
-//#include "coordinate.h"
-#include "snake.h"
+#include "HighScoreStorage.h"
+//#include "Coordinate.h"
+#include "Snake.h"
 #include "SnakeInfo.h"
 
 class SnakeGame {

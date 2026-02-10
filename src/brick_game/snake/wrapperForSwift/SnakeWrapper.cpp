@@ -1,5 +1,5 @@
-#include "snake_wrapper.h"
-#include "../controller_snake.h"
+#include "SnakeWrapper.h"
+#include "../ControllerSnake.h"
 
 static Controller snake_controller;
 

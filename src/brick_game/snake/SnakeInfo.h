@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "coordinate.h"
+#include "Coordinate.h"
 #include "../struct.h"
 #include <list>
 
