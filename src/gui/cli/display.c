@@ -1,4 +1,5 @@
 #include "display.h"
+#include "../../brick_game/defines.h"
 
 void setup_gui() {
   initscr();

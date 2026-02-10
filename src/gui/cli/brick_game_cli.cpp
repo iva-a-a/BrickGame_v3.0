@@ -5,8 +5,8 @@ int main() {
   int key = getch();
 
   while (key != 27) {
-   print_game_setection();
-  if (key == 't' || key == 'T') {
+    print_game_setection();
+    if (key == 't' || key == 'T') {
       game_tetris();
       clear_screen();
     } else if (key == 's' || key == 'S') {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../brick_game/snake/controller_snake.h"
+#include "../../../brick_game/snake/ControllerSnake.h"
 #include "../display.h"
 
 class SnakeDisplay {

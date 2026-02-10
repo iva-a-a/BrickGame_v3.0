@@ -9,36 +9,46 @@ void SnakeDisplay::print_win() {
 }
 
 void SnakeDisplay::game_snake() {
-  while (controller->get_model()->get_state() != Exit) {
-    UserAction_t prev_key = controller->get_model()->get_currAction();
+  UserAction_t prev_key = None;
+
+  while (true) {
     UserAction_t key = input_key();
-    controller->userInput(key, prev_key == key && key != None);
+    bool hold = (prev_key == key && key != None);
+    prev_key = key;
+
+    controller->userInput(key, hold);
+
     GameInfo_t info = controller->updateCurrentState();
+    if (info.pause == 9) {
+      controller->clearGameInfo(info);
+      break;
+    }
+
     printCurrentState(info);
     controller->clearGameInfo(info);
   }
 }
 
 void SnakeDisplay::printCurrentState(GameInfo_t &info) {
-  GameState_t state = controller->get_model()->get_state();
-  if (state == Begin) {
+  if (info.pause == 2) {
     print_start();
-  } else if (state == End) {
-    if (info.score == SCORE_WIN) {
-      print_stats(info.level, info.speed, info.score, info.high_score, 500);
-      print_win();
-    } else {
-      print_game_over();
-    }
+
+  } else if (info.pause == 3) {
+    print_game_over();
+
   } else {
     print_game_board();
     print_stats_ban();
     print_stats(info.level, info.speed, info.score, info.high_score, 500);
     print_arr(info.field);
     print_arr(info.next);
-    if (state == Break) {
+
+    if (info.pause == 1) {
       print_pause();
+    } else if (info.pause == 4) {
+      print_win();
     }
   }
+
   refresh();
 }

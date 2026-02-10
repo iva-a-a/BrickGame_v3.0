@@ -14,7 +14,21 @@ GameInfo_t SnakeInfoConverter::toGameInfo(const SnakeInfo info) {
     out.high_score = info.high_score;
     out.level = info.level;
     out.speed = info.speed;
-    out.pause = info.pause ? 1 : 0;
+    //out.pause = info.pause ? 1 : 0;
+    // КОД ЭКРАНА в out.pause (GameInfo_t не меняем)
+    if (info.score == 1000) {
+      out.pause = 4;                 // WIN (по очкам, как ты просишь)
+    } else if (info.state == Break) {
+      out.pause = 1;                 // PAUSE
+    } else if (info.state == Begin) {
+      out.pause = 2;                 // START SCREEN
+    } else if (info.state == End) {
+      out.pause = 3;                 // GAME OVER
+    } else if (info.state == Exit) {
+      out.pause = 9;                 // EXIT
+    } else {
+      out.pause = 0;                 // RUNNING
+    }
 
     out.next = listToArray(info.snake);
     out.field = coordinateToArray(info.apple);

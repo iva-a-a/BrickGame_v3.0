@@ -3,7 +3,7 @@
 
 #include <ncurses.h>
 
-#include "../../brick_game/tetris/back_tetris.h"
+#include "../../brick_game/struct.h"
 
 #ifdef __cplusplus
 extern "C" {
