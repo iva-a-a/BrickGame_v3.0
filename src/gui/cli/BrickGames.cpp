@@ -10,8 +10,7 @@ int main() {
       game_tetris();
       clear_screen();
     } else if (key == 's' || key == 'S') {
-      Controller controller;
-      SnakeDisplay game(&controller);
+      SnakeDisplay game;
       game.game_snake();
       clear_screen();
     }

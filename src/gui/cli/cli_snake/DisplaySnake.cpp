@@ -1,7 +1,5 @@
 #include "DisplaySnake.h"
 
-SnakeDisplay::SnakeDisplay(Controller *c) : controller{c} {}
-
 void SnakeDisplay::print_win() {
   mvprintw(9, 0, "%*c", 22, ' ');
   mvprintw(10, 0, "         YOU WIN        ");
@@ -16,20 +14,17 @@ void SnakeDisplay::game_snake() {
     bool hold = (prev_key == key && key != None);
     prev_key = key;
 
-    controller->userInput(key, hold);
+    snake_userInput(key, hold);
 
-    GameInfo_t info = controller->updateCurrentState();
+    GameInfo_t info = snake_updateCurrentState();
     if (info.pause == 9) {
-      controller->clearGameInfo(info);
       break;
     }
-
     printCurrentState(info);
-    controller->clearGameInfo(info);
   }
 }
 
-void SnakeDisplay::printCurrentState(GameInfo_t &info) {
+void SnakeDisplay::printCurrentState(GameInfo_t info) {
   if (info.pause == 2) {
     print_start();
 

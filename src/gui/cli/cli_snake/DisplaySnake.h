@@ -1,19 +1,17 @@
 #pragma once
 
-#include "../../../brick_game/snake/ControllerSnake.h"
+#include "../../../brick_game/snake/wrapper/SnakeWrapper.h"
 #include "../display.h"
 
 class SnakeDisplay {
- private:
-  Controller *controller;
 
- public:
-  explicit SnakeDisplay(Controller *c);
-
+public:
+  SnakeDisplay() = default;
   ~SnakeDisplay() = default;
 
-  void print_win();
-  void printCurrentState(GameInfo_t &info);
-
   void game_snake();
+
+private:
+  void print_win();
+  void printCurrentState(GameInfo_t info);
 };
