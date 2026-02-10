@@ -4,9 +4,7 @@
 #include <list>
 
 #include "../defines.h"
-//#include "../struct.h"
 #include "HighScoreStorage.h"
-//#include "Coordinate.h"
 #include "Snake.h"
 #include "SnakeInfo.h"
 
@@ -16,7 +14,6 @@ public:
     ~SnakeGame() = default;
     
     SnakeInfo getInfo() const;
-    
 
     void update();
     void fsm(UserAction_t action, bool hold);
