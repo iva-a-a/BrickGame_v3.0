@@ -1,78 +1,47 @@
 #include <cstdlib>
 #include <ctime>
-#include <fstream>
 #include <iostream>
 #include <list>
 
 #include "../defines.h"
-#include "../struct.h"
-
-
-enum class Direction {
-  Up,
-  Down,
-  Right,
-  Left
-};
-
-struct Coordinate {
-  int x;
-  int y;
-
-  bool eq_coordinate(const Coordinate &a) const {
-    return (x == a.x && y == a.y);
-  }
-
-  bool operator==(const Coordinate &a) const { return eq_coordinate(a); }
-};
-
+//#include "../struct.h"
+#include "highscore_storage.h"
+//#include "coordinate.h"
+#include "snake.h"
+#include "SnakeInfo.h"
 
 class SnakeGame {
 public:
-    SnakeGame();
+    explicit SnakeGame(const HighScoreStorage* storage = nullptr);
     ~SnakeGame() = default;
     
-    void set_state(GameState_t state);
-    void set_currAction(UserAction_t currentAction);
-    GameState_t get_state() const;
-    UserAction_t get_currAction();
-    std::list<Coordinate> &get_snake();
-    Coordinate get_apple();
-    int get_score();
-    int get_high_score();
-    int get_level();
-    int get_speed();
+    SnakeInfo getInfo() const;
     
-    void move_snake();
+
     void update();
+    void fsm(UserAction_t action, bool hold);
 
 private:
-    std::list<Coordinate> snake;
-    Coordinate apple;
+    Snake snake_;
+    Coordinate apple_;
     
-    int s_score;
-    Direction dir;
-    GameState_t state;
-    UserAction_t currentAction;
-    long long int prev_time;
+    const HighScoreStorage* storage_ = nullptr;
     
-    int s_high_score;
-    int s_level;
-    int s_speed;
-    
-    void set_prev_time(long long int time);
+    GameState_t state_;
+    UserAction_t currentAction_;
+    long long int prevTime_;
+    int score_;
+    int highScore_;
+    int level_;
+    int speed_;
 
-    void put_apple();
-    void create_snake();
+    void moveSnake();
+    void putApple();
+    void checkMoveSnake();
+    void changeDirection(UserAction_t currentAction);
+    bool isCollision(const Coordinate &pos) const;
+    void increaseLevel();
+    void saveHighScore();
 
-    Coordinate snake_head_new_pos();
-    void check_move_snake();
-    void change_direction(UserAction_t currentAction);
-    bool collision(const Coordinate &pos);
-    void increase_level();
-
-    void save_high_score();
-
-    void clearing_game();
-    void initial_info();
+    void clearingGame();
 };
