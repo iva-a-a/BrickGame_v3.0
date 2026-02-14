@@ -1,0 +1,155 @@
+#include "../../brick_game/tetris/controller_tetris.h"
+#include "../../brick_game/snake/wrapper/SnakeWrapper.h"
+#include "render.h"
+#include "render_logic.h"
+#include "display.h"
+
+static void draw_matrix_blocks(int **matrix, int rows, int cols,
+                               int top, int left,
+                               bool clear_area) {
+  if (!matrix) {
+    return;
+  }
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      int y = top + i;
+      int x = left + j * 2;
+      if (clear_area) {
+        mvprintw(y, x, "  ");
+      }
+      if (matrix[i][j] != 0) {
+        mvprintw(y, x, "[]");
+      }
+    }
+  }
+}
+
+static void draw_frame(GameInfo_t info, bool draw_next) {
+  print_game_board();
+  print_stats_ban();
+  print_stats(info.level, info.speed, info.score, info.high_score, 1000);
+
+  draw_matrix_blocks(info.field, ROWS_BOARD, COL_BOARD, 1, 1, false);
+
+  if (draw_next) {
+    draw_matrix_blocks(info.next, ROWS_FIGURE - 1, COL_FIGURE, 2, 25, true);
+  }
+}
+
+static bool wait_restart_or_exit() {
+  while (1) {
+    UserAction_t action = input_key();
+    if (action == Terminate) {
+      return false;
+    }
+    if (action == Start) {
+      return true;
+    }
+  }
+}
+
+static void printCurrentState(GameInfo_t info) {
+  if (!info.field) {
+    return;
+  }
+  if (info.pause) {
+    print_pause();
+  } else {
+    draw_frame(info, true);
+  }
+  refresh();
+}
+
+static bool gameover_screen_and_wait(GameInfo_t info) {
+  if (info.field) {
+    draw_frame(info, false);
+  } else {
+    print_game_board();
+  }
+  print_game_over();
+  refresh();
+  return wait_restart_or_exit();
+}
+
+void print_tetris() {
+  print_start();
+  refresh();
+  while (1) {
+    UserAction_t a = input_key();
+    if (a == Start) {
+      break;
+    }
+  }
+
+  tetris_userInput(Start, false);
+
+  while (1) {
+    UserAction_t a = input_key();
+    if (a != None) {
+      tetris_userInput(a, false);
+    }
+
+    GameInfo_t info = tetris_updateCurrentState();
+
+    if (info.next == NULL) {
+      bool restart = gameover_screen_and_wait(info);
+      if (!restart) {
+        tetris_userInput(Terminate, false);
+        return;
+      }
+      tetris_userInput(Start, false);
+      continue;
+    }
+
+    printCurrentState(info);
+  }
+}
+
+static void printCurrentStateSnake(GameInfo_t info) {
+  if (!info.field) {
+    return;
+  }
+  draw_frame(info, false);
+  if (info.pause) {
+    print_pause();
+  }
+  refresh();
+}
+
+
+void print_snake() {
+  print_start();
+  refresh();
+  while (1) {
+    UserAction_t a = input_key();
+    if (a == Start) break;
+  }
+
+  snake_userInput(Start, false);
+  UserAction_t prev = None;
+
+  while (1) {
+    UserAction_t a = input_key();
+
+    bool hold = (a != None && a == prev);
+    prev = a;
+
+    if (a != None) {
+      snake_userInput(a, hold);
+    }
+
+    GameInfo_t info = snake_updateCurrentState();
+
+    if (info.next == NULL) {
+      bool restart = gameover_screen_and_wait(info);
+      if (!restart) {
+        snake_userInput(Terminate, false);
+        return;
+      }
+      snake_userInput(Start, false);
+      continue;
+    }
+
+    printCurrentStateSnake(info);
+  }
+}
