@@ -1,4 +1,7 @@
-#include "BrickGames.h"
+#include "display.h"
+#include "render_logic.h"
+#include "render.h"
+
 
 int main() {
   setup_gui();
@@ -7,11 +10,10 @@ int main() {
   while (key != 27) {
     print_game_setection();
     if (key == 't' || key == 'T') {
-      game_tetris();
+      print_tetris();
       clear_screen();
     } else if (key == 's' || key == 'S') {
-      SnakeDisplay game;
-      game.game_snake();
+      print_snake();
       clear_screen();
     }
     key = getch();
