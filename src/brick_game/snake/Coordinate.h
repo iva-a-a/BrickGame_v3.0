@@ -5,7 +5,6 @@
 //  Created by Alena Ivanova on 10.02.2026.
 //
 #pragma once
-//#include <iostream>
 
 struct Coordinate {
   int x;
