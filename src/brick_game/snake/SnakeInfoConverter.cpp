@@ -8,86 +8,52 @@
 #include "SnakeInfoConverter.h"
 #include "../defines.h"
 
-static constexpr int MAX_SNAKE = ROWS_BOARD * COL_BOARD;
+#define BASE_UI_SPEED 1000
+#define BASE_SNAKE_SPEED 500
 
-static int  g_snake_buf[MAX_SNAKE + 1][3];
-static int* g_snake_rows[MAX_SNAKE + 1];
-
-static int  g_apple_buf[2][3];
-static int* g_apple_rows[2];
-
+static int  g_field_buf[ROWS_BOARD][COL_BOARD];
+static int* g_field_rows[ROWS_BOARD];
 static bool g_inited = false;
 
 static void ensure_buffers() {
-    if (g_inited) return;
+  if (g_inited) return;
+  for (int i = 0; i < ROWS_BOARD; ++i) g_field_rows[i] = g_field_buf[i];
+  g_inited = true;
+}
 
-    for (int i = 0; i < MAX_SNAKE + 1; ++i) {
-        g_snake_rows[i] = g_snake_buf[i];
-    }
-    for (int i = 0; i < 2; ++i) {
-        g_apple_rows[i] = g_apple_buf[i];
-    }
-    g_inited = true;
+static void clear_field() {
+  for (int i = 0; i < ROWS_BOARD; ++i)
+    for (int j = 0; j < COL_BOARD; ++j)
+      g_field_buf[i][j] = 0;
 }
 
 GameInfo_t SnakeInfoConverter::toGameInfo(const SnakeInfo& info) {
     ensure_buffers();
-
+    clear_field();
+    listToArray(info.snake);
+    coordinateToArray(info.apple);
+    
     GameInfo_t out{};
 
     out.score = info.score;
     out.high_score = info.high_score;
     out.level = info.level;
-    out.speed = info.speed;
-
-    if (info.score == 1000) {
-        out.pause = 4;          // WIN
-    } else if (info.state == Break) {
-        out.pause = 1;          // PAUSE
-    } else if (info.state == Begin) {
-        out.pause = 2;          // START
-    } else if (info.state == End) {
-        out.pause = 3;          // GAME OVER
-    } else if (info.state == Exit) {
-        out.pause = 9;          // EXIT
-    } else {
-        out.pause = 0;          // RUNNING
-    }
-    out.next  = listToArray(info.snake);
-    out.field = coordinateToArray(info.apple);
+    out.speed = info.speed * (BASE_UI_SPEED / BASE_SNAKE_SPEED);
+    out.pause = info.state == Break;
+    out.next = (info.state == End) ? nullptr : g_field_rows;
+    out.field = g_field_rows;
 
     return out;
 }
 
-int **SnakeInfoConverter::listToArray(const std::list<Coordinate>& l) {
-    ensure_buffers();
-
-    int idx = 0;
+void SnakeInfoConverter::listToArray(const std::list<Coordinate>& l) {
     for (const auto& c : l) {
-        if (idx >= MAX_SNAKE) break;
-        g_snake_buf[idx][0] = c.x;
-        g_snake_buf[idx][1] = c.y;
-        g_snake_buf[idx][2] = 0;
-        idx++;
+      if (c.y >= 0 && c.y < ROWS_BOARD && c.x >= 0 && c.x < COL_BOARD)
+        g_field_buf[c.y][c.x] = 1;
     }
-
-    g_snake_buf[idx][0] = -1;
-    g_snake_buf[idx][1] = -1;
-    g_snake_buf[idx][2] = -1;
-
-    return g_snake_rows;
 }
 
-int **SnakeInfoConverter::coordinateToArray(Coordinate c) {
-    ensure_buffers();
-
-    g_apple_buf[0][0] = c.x;
-    g_apple_buf[0][1] = c.y;
-    g_apple_buf[0][2] = 7;
-
-    g_apple_buf[1][0] = -1;
-    g_apple_buf[1][1] = -1;
-    g_apple_buf[1][2] = -1;
-
-    return g_apple_rows;
+void SnakeInfoConverter::coordinateToArray(Coordinate c) {
+    if (c.y >= 0 && c.y < ROWS_BOARD && c.x >= 0 && c.x < COL_BOARD)
+       g_field_buf[c.y][c.x] = 1;
 }

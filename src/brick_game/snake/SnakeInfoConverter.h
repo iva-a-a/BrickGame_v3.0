@@ -13,6 +13,6 @@ public:
     static GameInfo_t toGameInfo(const SnakeInfo& info);
     
 private:
-    static int **listToArray(const std::list<Coordinate>& l);
-    static int **coordinateToArray(Coordinate c);
+    static void listToArray(const std::list<Coordinate>& l);
+    static void coordinateToArray(Coordinate c);
 };
