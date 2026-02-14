@@ -7,11 +7,18 @@
 
 #include "Snake.h"
 #include <iterator>
+#include "../defines.h"
 
 Snake::Snake() { reset(); }
 
 void Snake::reset() {
-    body_ = {{18, 5}, {17, 5}, {16, 5}, {15, 5}};
+    int y = ROWS_BOARD / 2;
+    int x = COL_BOARD / 2;
+    body_.clear();
+    body_.push_back({x, y + 3});
+    body_.push_back({x, y + 2});
+    body_.push_back({x, y + 1});
+    body_.push_back({x, y});
     dir_ = Direction::Up;
 }
 
@@ -38,16 +45,16 @@ Coordinate Snake::nextHeadPos() const {
     Coordinate pos = body_.back();
     switch (dir_) {
       case Direction::Up:
-        pos.x--;
-        break;
-      case Direction::Down:
-        pos.x++;
-        break;
-      case Direction::Left:
         pos.y--;
         break;
-      case Direction::Right:
+      case Direction::Down:
         pos.y++;
+        break;
+      case Direction::Left:
+        pos.x--;
+        break;
+      case Direction::Right:
+        pos.x++;
     }
     return pos;
 }
