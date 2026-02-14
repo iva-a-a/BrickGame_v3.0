@@ -33,15 +33,15 @@ void SnakeGame::clearingGame() {
     currentAction_ = None;
     state_ = Begin;
     snake_.reset();
-   // putApple();
 }
 
 void SnakeGame::putApple() {
   bool appleIsFree;
   do {
-    int x = rand() % ROWS_BOARD;
-    int y = rand() % COL_BOARD;
+      int x = rand() % COL_BOARD;
+      int y = rand() % ROWS_BOARD;
       apple_ = {x, y};
+
       const auto& body = snake_.getBody();
       appleIsFree =
         std::none_of(body.begin(), body.end(),
@@ -50,9 +50,9 @@ void SnakeGame::putApple() {
 }
 
 bool SnakeGame::isCollision(const Coordinate &pos) const {
-  if (pos.x < 0 || pos.x >= ROWS_BOARD || pos.y < 0 || pos.y >= COL_BOARD) {
-    return true;
-  }
+    if (pos.x < 0 || pos.x >= COL_BOARD || pos.y < 0 || pos.y >= ROWS_BOARD) {
+      return true;
+    }
   return snake_.hitsSelf(pos);
 }
 
@@ -110,27 +110,48 @@ void SnakeGame::saveHighScore() {
   }
 }
 
+//void SnakeGame::update() {
+//  if (state_ == Begin) {
+//    clearingGame();
+//  } else if (state_ == Generation) {
+//      prevTime_ = time_in_millisec();
+//      putApple();
+//      this->state_ = Falling;
+//  } else if (state_ == Falling) {
+//      checkMoveSnake();
+//  } else if (state_ == Moving_rotate) {
+//    changeDirection(currentAction_);
+//      this->state_ = Falling;
+//  } else if (state_ == Attaching) {
+//    increaseLevel();
+//    saveHighScore();
+//      state_ = Generation;
+//  }
+//}
+
 void SnakeGame::update() {
-  if (state_ == Begin) {
-    clearingGame();
-  } else if (state_ == Generation) {
-      prevTime_ = time_in_millisec();
-      putApple();
-      this->state_ = Falling;
+  if (state_ == Begin || state_ == Exit || state_ == End) return;
+
+  if (state_ == Generation) {
+    prevTime_ = time_in_millisec();
+    putApple();
+    state_ = Falling;
   } else if (state_ == Falling) {
-      checkMoveSnake();
+    checkMoveSnake();
   } else if (state_ == Moving_rotate) {
     changeDirection(currentAction_);
-      this->state_ = Falling;
+    state_ = Falling;
   } else if (state_ == Attaching) {
     increaseLevel();
     saveHighScore();
-      state_ = Generation;
+    state_ = Generation;
   }
 }
 
+
 void SnakeGame::fsm(UserAction_t action, bool hold) {
   if (action == Start && state_ == Begin) {
+      clearingGame(); 
       state_ = Generation;
   } else if (state_ == Falling) {
     if (action == Pause) {
