@@ -16,8 +16,7 @@ void print_stats_ban();
 void print_start();
 void print_pause();
 void print_game_over();
-void print_stats(int level, int speed, int score, int high_score,
-                 int begin_speed);
+void print_stats(int level, int speed, int score, int high_score);
 
 #ifdef __cplusplus
 }

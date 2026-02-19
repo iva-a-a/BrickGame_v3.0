@@ -71,10 +71,9 @@ void print_game_over() {
   mvprintw(21, 24, "ENTER - restart");
 }
 
-void print_stats(int level, int speed, int score, int high_score,
-                 int begin_speed) {
+void print_stats(int level, int speed, int score, int high_score) {
   mvprintw(6, 29, "%-5d", level);
-  mvprintw(9, 29, "%-5.2f", (float)begin_speed / speed);
+  mvprintw(9, 29, "%-5.2f", (float)1000 / speed);
   mvprintw(12, 29, "%-10d", score);
   mvprintw(15, 29, "%-10d", high_score);
 }
