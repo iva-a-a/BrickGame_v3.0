@@ -3,7 +3,7 @@
 #include <functional>
 
 extern "C" {
-#include "../../brick_game/struct.h"   // тут GameInfo_t и UserAction_t
+#include "../../brick_game/struct.h"
 }
 
 struct GameApiQt {
