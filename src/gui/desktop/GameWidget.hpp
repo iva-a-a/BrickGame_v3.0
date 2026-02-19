@@ -19,6 +19,7 @@ protected:
 
 private:
   void onTick();
+void startOrRestartNow();
   UserAction_t mapKey(QKeyEvent* e) const;
 
 private:

@@ -16,17 +16,16 @@ GameWidget::GameWidget(QMainWindow* parent, GameApiQt api, int tickMs)
 }
 
 void GameWidget::onTick() {
-  if (mode_ == Mode::StartScreen) return;
+  if (mode_ != Mode::Playing) return;
 
   last_ = api_.update();
 
-  // как в консоли: next == NULL => game over
-  if (mode_ == Mode::Playing && last_.next == nullptr) {
+  if (last_.next == nullptr) {
     mode_ = Mode::GameOver;
   }
-
   update();
 }
+
 
 void GameWidget::paintEvent(QPaintEvent* e) {
   Q_UNUSED(e)
@@ -91,8 +90,6 @@ UserAction_t GameWidget::mapKey(QKeyEvent* e) const {
 
 void GameWidget::keyPressEvent(QKeyEvent* e) {
   UserAction_t act = mapKey(e);
-
-  // ESC = exit (как в консоли)
   if (act == Terminate) {
     api_.input(Terminate, false);
     close();
@@ -100,26 +97,19 @@ void GameWidget::keyPressEvent(QKeyEvent* e) {
     return;
   }
 
-  if (mode_ == Mode::StartScreen) {
-    if (act == Start) {
-      api_.input(Start, false);
-      mode_ = Mode::Playing;
-    }
-    update();
-    return;
+if (mode_ == Mode::StartScreen) {
+  if (act == Start) {
+    startOrRestartNow();
   }
+  return;
+}
 
-  if (mode_ == Mode::GameOver) {
-    if (act == Start) {
-      api_.input(Start, false);
-      prev_ = None;
-      mode_ = Mode::Playing;
-    }
-    update();
-    return;
+if (mode_ == Mode::GameOver) {
+  if (act == Start) {
+    startOrRestartNow();
   }
-
-  // Playing
+  return;
+}
   if (act != None) {
     bool hold = false;
     if (api_.useHold) {
@@ -129,5 +119,15 @@ void GameWidget::keyPressEvent(QKeyEvent* e) {
     api_.input(act, hold);
   }
 
+  update();
+}
+
+void GameWidget::startOrRestartNow() {
+  api_.input(Start, false);
+  api_.input(Start, false);
+
+  prev_ = None;
+  mode_ = Mode::Playing;
+  last_ = api_.update();
   update();
 }
