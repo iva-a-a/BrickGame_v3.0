@@ -6,25 +6,22 @@ CPPFLAGS += $(CFLAGS) -std=c++17
 LIBDIR_TET = brick_game/tetris
 LIBDIR_SN = brick_game/snake
 
-GUIDIR_TET = gui/cli/cli_tetris
-GUIDIR_SN = gui/cli/cli_snake
 GUIDIR = gui/cli
 
-LIBRARY_TET = tetris.a
-LIBRARY_SN = snake.a
+LIBRARY_TET = libtetris.a
+LIBRARY_SN = libsnake.a
 
-SOURCES_C = $(wildcard $(LIBDIR_TET)/*.c) $(wildcard $(GUIDIR_TET)/*.c) $(wildcard $(GUIDIR)/*.c)
-SOURCES_CPP = $(wildcard $(LIBDIR_SN)/*.cpp) $(wildcard $(GUIDIR_SN)/*.cpp) $(wildcard $(GUIDIR)/*.cpp)
+SOURCES_C_LIB = $(wildcard $(LIBDIR_TET)/*.c)
+SOURCES_CPP_LIB = $(wildcard $(LIBDIR_SN)/*.cpp) $(wildcard $(LIBDIR_SN)/*/*.cpp)
 
-OBJECTS_C = $(SOURCES_C:.c=.o)
-OBJECTS_CPP = $(SOURCES_CPP:.cpp=.o)
+OBJECTS_C_LIB = $(SOURCES_C_LIB:.c=.o)
+OBJECTS_CPP_LIB = $(SOURCES_CPP_LIB:.cpp=.o)
+
+SOURCES_UI = $(wildcard $(GUIDIR)/*.c)
+OBJECTS_UI = $(SOURCES_UI:.c=.o)
 
 GAME_CONSOLE = console
 GAME_DESKTOP = desktop
-GAME = brickgame
-GAME_VERSION = 2.0
-
-ALL_SRC = $(wildcard */*.h */*/*.h */*/*/*.h */*.c */*/*.c */*/*/*.c */*.cpp */*/*.cpp */*/*/*.cpp)
 
 .PHONY: all clean $(GAME_CONSOLE) $(GAME_DESKTOP)
 
@@ -32,14 +29,14 @@ all: $(GAME_DESKTOP) $(GAME_CONSOLE)
 	@clear
 	@echo Build in "build_cli" and "build_desk".
 
-$(GAME_CONSOLE): $(OBJECTS_C) $(OBJECTS_CPP) $(LIBRARY_TET) $(LIBRARY_SN)
+$(GAME_CONSOLE): $(OBJECTS_UI) $(LIBRARY_TET) $(LIBRARY_SN)
 	mkdir -p build_cli
-	$(CPP) $(CFLAGS) -o $@ $^ -lncurses
+	$(CPP) $(CPPFLAGS) -o $@ $^ -lncurses
 	mv console ./build_cli
 	@clear
 	@echo Build in "build_cli".
 
-$(GAME_DESKTOP): clean
+$(GAME_DESKTOP): $(LIBRARY_TET) $(LIBRARY_SN)
 	mkdir desk
 	cd desk && qmake6 ../gui/desktop
 	sed -i '' 's/-framework AGL//g' desk/Makefile
@@ -52,7 +49,7 @@ $(GAME_DESKTOP): clean
 	@echo Build in "build_desk".
 
 clean:
-	rm -f $(GAME) $(LIBDIR_TET)/*.o $(GUIDIR_TET)/*.o $(GUIDIR)/*.o $(LIBDIR_SN)/*.o $(GUIDIR_SN)/*.o
+	find . -type f -name "*.o" -delete
 	rm -f *.a
 	rm -f *.txt
 	rm -rf desk build_cli build_desk
@@ -65,10 +62,10 @@ clean:
 %.o: %.cpp
 	$(CPP) $(CPPFLAGS) -c -o $@ $<
 
-$(LIBRARY_TET): $(LIBDIR_TET)/back_tetris.o
+$(LIBRARY_TET): $(OBJECTS_C_LIB)
 	ar rcs $@ $^
 	ranlib $@
 
-$(LIBRARY_SN): $(LIBDIR_SN)/controller_snake.o $(LIBDIR_SN)/model_snake.o
+$(LIBRARY_SN): $(OBJECTS_CPP_LIB)
 	ar rcs $@ $^
 	ranlib $@
