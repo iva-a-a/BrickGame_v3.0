@@ -17,27 +17,26 @@ INCLUDEPATH += .
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += brick_game_desk.h \
-           desktop.h \
-           snake_desktop.h \
-           tetris_desktop.h \
-           main_window.h \
-           ../../brick_game/defines.h \
+HEADERS += Drawing.hpp \
+           GameApi.hpp \
+           GameWidget.hpp \
+           MainWindow.hpp \
            ../../brick_game/struct.h \
-           ../../brick_game/snake/controller_snake.h \
-           ../../brick_game/snake/model_snake.h \
-           ../../brick_game/tetris/back_tetris.h \
+           ../../brick_game/snake/wrapper/SnakeWrapper.h \
            ../../brick_game/tetris/controller_tetris.h \
 
-SOURCES += brick_game_desk.cpp \
-           desktop.cpp \
-           snake_desktop.cpp \
-           tetris_desktop.cpp \
-           main_window.cpp \
-           ../../brick_game/snake/controller_snake.cpp \
-           ../../brick_game/snake/model_snake.cpp \
-           ../../brick_game/tetris/back_tetris.c \
-           ../../brick_game/tetris/controller_tetris.c \
+SOURCES += Drawing.cpp \
+           GameWidget.cpp \
+           MainWindow.cpp \
+           BrickGamesDesktop.cpp \
 
-TEMPLATE = app
 CONFIG -= app_bundle
+
+# Include paths for headers
+INCLUDEPATH += $$PWD/../../brick_game
+INCLUDEPATH += $$PWD/../../brick_game/snake
+INCLUDEPATH += $$PWD/../../brick_game/snake/wrapper
+INCLUDEPATH += $$PWD/../../brick_game/tetris
+
+# Link with static libraries built by top-level Makefile
+LIBS += -L$$PWD/../.. -lsnake -ltetris
