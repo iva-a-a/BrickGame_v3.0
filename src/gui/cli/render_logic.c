@@ -27,7 +27,7 @@ static void draw_matrix_blocks(int **matrix, int rows, int cols,
 static void draw_frame(GameInfo_t info, bool draw_next) {
   print_game_board();
   print_stats_ban();
-  print_stats(info.level, info.speed, info.score, info.high_score, 1000);
+  print_stats(info.level, info.speed, info.score, info.high_score);
 
   draw_matrix_blocks(info.field, ROWS_BOARD, COL_BOARD, 1, 1, false);
 
