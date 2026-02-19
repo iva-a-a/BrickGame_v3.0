@@ -5,10 +5,6 @@
 static constexpr int ROWS_BOARD = 20;
 static constexpr int COL_BOARD  = 10;
 
-// если у тебя для тетриса другое — замени
-static constexpr int ROWS_FIGURE_DRAW = 4;
-static constexpr int COL_FIGURE_DRAW  = 4;
-
 GameWidget::GameWidget(QMainWindow* parent, GameApiQt api, int tickMs)
   : Drawing(parent), api_(std::move(api)) {
 
@@ -37,32 +33,38 @@ void GameWidget::paintEvent(QPaintEvent* e) {
   QPainter p(this);
   setupPainter(p);
 
-  // чтобы не было “хвостов”
-  p.fillRect(rect(), Qt::white);
+  QColor gameBackground(170, 170, 170);
+  p.fillRect(rect(), gameBackground);
+  p.setPen(Qt::black);
 
   if (mode_ == Mode::StartScreen) {
+    p.setPen(Qt::white);
     drawStart(p);
     return;
   }
 
-  // поле + статы
   drawBoard(p);
 
   if (last_.field) {
     drawMatrix(last_.field, ROWS_BOARD, COL_BOARD, p, 0, 0);
   }
 
-  drawBannerStat(p, last_.level, last_.speed, last_.score, last_.high_score, api_.beginSpeed);
-
-  // next
   if (api_.drawNext) {
     int offX = SIZE_RECT * 10 + 10;
     int offY = SIZE_RECT * 2;
     if (last_.next) {
-      drawMatrix(last_.next, ROWS_FIGURE_DRAW, COL_FIGURE_DRAW, p, offX, offY);
+      drawMatrix(last_.next, 4, 4, p, offX, offY);
     }
+    p.setPen(Qt::white);
     p.drawText(offX, SIZE_RECT, "Next:");
   }
+
+  p.setPen(Qt::white);
+  drawBannerStat(p,
+                 last_.level,
+                 last_.speed,
+                 last_.score,
+                 last_.high_score);
 
   if (mode_ == Mode::GameOver) {
     drawGameover(p);
@@ -70,6 +72,7 @@ void GameWidget::paintEvent(QPaintEvent* e) {
     drawPause(p);
   }
 }
+
 
 UserAction_t GameWidget::mapKey(QKeyEvent* e) const {
   switch (e->key()) {
