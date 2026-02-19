@@ -22,6 +22,6 @@ class Drawing : public QWidget {
   void drawPause(QPainter &p);
   void drawGameover(QPainter &p);
   void drawBannerStat(QPainter &p, int level, int speed, int score,
-                        int h_score, int begin_speed);
+                        int h_score);
   QMainWindow *parent_;
 };

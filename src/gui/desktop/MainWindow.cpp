@@ -91,7 +91,6 @@ void MainWindow::onSnake() {
   GameApiQt api;
   api.update = [] { return snake_updateCurrentState(); };
   api.input  = [](UserAction_t a, bool h) { snake_userInput(a, h); };
-  api.beginSpeed = 500;
   api.drawNext = false;
   api.useHold = true;
 
@@ -107,7 +106,6 @@ void MainWindow::onTetris() {
   GameApiQt api;
   api.update = [] { return tetris_updateCurrentState(); };
   api.input  = [](UserAction_t a, bool h) { tetris_userInput(a, h); };
-  api.beginSpeed = 1000;
   api.drawNext = true;
   api.useHold = false;
 

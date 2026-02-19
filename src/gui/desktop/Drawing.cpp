@@ -20,7 +20,6 @@ void Drawing::setupPainter(QPainter &p) {
 }
 
 void Drawing::drawMatrix(int **m, int rows, int cols, QPainter &p, int offX, int offY) {
-  p.fillRect(rect(), Qt::white);
   if (!m) return;
   for (int i = 0; i < rows; ++i) {
     for (int j = 0; j < cols; ++j) {
@@ -31,7 +30,6 @@ void Drawing::drawMatrix(int **m, int rows, int cols, QPainter &p, int offX, int
     }
   }
 }
-
 
 void Drawing::drawBoard(QPainter &p) {
   for (int x = 0; x < SIZE_RECT * 10; x += SIZE_RECT) {
@@ -54,11 +52,11 @@ void Drawing::drawGameover(QPainter &p) {
 }
 
 void Drawing::drawBannerStat(QPainter &p, int level, int speed, int score,
-                                  int h_score, int begin_speed) {
+                                  int h_score) {
   std::string l = "Level: " + std::to_string(level);
   p.drawText(SIZE_RECT * 10 + 5, SIZE_RECT * 4 + 25, l.data());
 
-  float speedSn = (float)begin_speed / speed;
+  float speedSn = (float)1000 / speed;
   std::ostringstream oss;
   oss << std::fixed << std::setprecision(2) << speedSn;
   std::string sp = "Speed: " + oss.str();
