@@ -1,12 +1,12 @@
-#include "../../brick_game/tetris/controller_tetris.h"
-#include "../../brick_game/snake/wrapper/SnakeWrapper.h"
-#include "render.h"
 #include "render_logic.h"
-#include "display.h"
 
-static void draw_matrix_blocks(int **matrix, int rows, int cols,
-                               int top, int left,
-                               bool clear_area) {
+#include "../../brick_game/snake/wrapper/SnakeWrapper.h"
+#include "../../brick_game/tetris/controller_tetris.h"
+#include "display.h"
+#include "render.h"
+
+static void draw_matrix_blocks(int** matrix, int rows, int cols, int top,
+                               int left, bool clear_area) {
   if (!matrix) {
     return;
   }
@@ -115,7 +115,6 @@ static void printCurrentStateSnake(GameInfo_t info) {
   }
   refresh();
 }
-
 
 void print_snake() {
   print_start();

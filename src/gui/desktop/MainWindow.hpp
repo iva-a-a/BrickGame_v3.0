@@ -6,18 +6,18 @@ class GameWidget;
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
-public:
+ public:
   MainWindow();
   ~MainWindow() override = default;
 
-private slots:
+ private slots:
   void onSnake();
   void onTetris();
 
-private:
+ private:
   void setupUi();
   void deleteGame();
 
-private:
+ private:
   GameWidget* current_{nullptr};
 };

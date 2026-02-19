@@ -45,4 +45,3 @@ UserAction_t input_key() {
   }
   return return_key;
 }
-

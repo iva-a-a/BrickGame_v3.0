@@ -3,7 +3,6 @@
 #include <QBrush>
 #include <QColor>
 #include <QFont>
-
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -13,25 +12,28 @@ void Drawing::setupWindow() {
   setFocusPolicy(Qt::StrongFocus);
 }
 
-void Drawing::setupPainter(QPainter &p) {
+void Drawing::setupPainter(QPainter& p) {
   QFont font;
   font.setPointSize(14);
   p.setFont(font);
 }
 
-void Drawing::drawMatrix(int **m, int rows, int cols, QPainter &p, int offX, int offY) {
+void Drawing::drawMatrix(int** m, int rows, int cols, QPainter& p, int offX,
+                         int offY) {
   if (!m) return;
   for (int i = 0; i < rows; ++i) {
     for (int j = 0; j < cols; ++j) {
       int v = m[i][j];
       if (v == 0) continue;
-      p.fillRect(offX + j * SIZE_RECT, offY + i * SIZE_RECT, SIZE_RECT, SIZE_RECT, QBrush(QColor(Qt::black)));
-      p.drawRect(offX + j * SIZE_RECT, offY + i * SIZE_RECT, SIZE_RECT, SIZE_RECT);
+      p.fillRect(offX + j * SIZE_RECT, offY + i * SIZE_RECT, SIZE_RECT,
+                 SIZE_RECT, QBrush(QColor(Qt::black)));
+      p.drawRect(offX + j * SIZE_RECT, offY + i * SIZE_RECT, SIZE_RECT,
+                 SIZE_RECT);
     }
   }
 }
 
-void Drawing::drawBoard(QPainter &p) {
+void Drawing::drawBoard(QPainter& p) {
   for (int x = 0; x < SIZE_RECT * 10; x += SIZE_RECT) {
     for (int y = 0; y < SIZE_RECT * 20; y += SIZE_RECT) {
       p.drawRect(x, y, SIZE_RECT, SIZE_RECT);
@@ -39,20 +41,20 @@ void Drawing::drawBoard(QPainter &p) {
   }
 }
 
-void Drawing::drawStart(QPainter &p) {
+void Drawing::drawStart(QPainter& p) {
   p.drawText(rect(), Qt::AlignCenter, "Press ENTER to Start");
 }
 
-void Drawing::drawPause(QPainter &p) {
+void Drawing::drawPause(QPainter& p) {
   p.drawText(SIZE_RECT * 10 + 5, SIZE_RECT * 10 + 25, "PAUSE");
 }
-void Drawing::drawGameover(QPainter &p) {
+void Drawing::drawGameover(QPainter& p) {
   p.drawText(SIZE_RECT * 10 + 5, SIZE_RECT * 10 + 25, "GAME OVER!");
   p.drawText(SIZE_RECT * 10 + 5, SIZE_RECT * 19 + 25, "ENTER - restart");
 }
 
-void Drawing::drawBannerStat(QPainter &p, int level, int speed, int score,
-                                  int h_score) {
+void Drawing::drawBannerStat(QPainter& p, int level, int speed, int score,
+                             int h_score) {
   std::string l = "Level: " + std::to_string(level);
   p.drawText(SIZE_RECT * 10 + 5, SIZE_RECT * 4 + 25, l.data());
 

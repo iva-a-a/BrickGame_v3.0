@@ -1,28 +1,28 @@
 #pragma once
 
+#include <QTimer>
+
 #include "Drawing.hpp"
 #include "GameApi.hpp"
-
-#include <QTimer>
 
 class GameWidget : public Drawing {
   Q_OBJECT
 
-public:
+ public:
   enum class Mode { StartScreen, Playing, GameOver };
 
   GameWidget(QMainWindow* parent, GameApiQt api, int tickMs = 30);
 
-protected:
+ protected:
   void paintEvent(QPaintEvent* e) override;
   void keyPressEvent(QKeyEvent* e) override;
 
-private:
+ private:
   void onTick();
-void startOrRestartNow();
+  void startOrRestartNow();
   UserAction_t mapKey(QKeyEvent* e) const;
 
-private:
+ private:
   GameApiQt api_;
   QTimer* timer_{nullptr};
 

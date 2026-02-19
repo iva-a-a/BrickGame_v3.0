@@ -1,16 +1,14 @@
 #include "MainWindow.hpp"
-#include "GameWidget.hpp"
 
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QWidget>
 
-#include "../../brick_game/tetris/controller_tetris.h"
 #include "../../brick_game/snake/wrapper/SnakeWrapper.h"
+#include "../../brick_game/tetris/controller_tetris.h"
+#include "GameWidget.hpp"
 
-MainWindow::MainWindow() {
-  setupUi();
-}
+MainWindow::MainWindow() { setupUi(); }
 
 void MainWindow::setupUi() {
   setFixedSize(300, 100);
@@ -46,7 +44,7 @@ void MainWindow::onSnake() {
 
   GameApiQt api;
   api.update = [] { return snake_updateCurrentState(); };
-  api.input  = [](UserAction_t a, bool h) { snake_userInput(a, h); };
+  api.input = [](UserAction_t a, bool h) { snake_userInput(a, h); };
   api.drawNext = false;
   api.useHold = true;
 
@@ -61,7 +59,7 @@ void MainWindow::onTetris() {
 
   GameApiQt api;
   api.update = [] { return tetris_updateCurrentState(); };
-  api.input  = [](UserAction_t a, bool h) { tetris_userInput(a, h); };
+  api.input = [](UserAction_t a, bool h) { tetris_userInput(a, h); };
   api.drawNext = true;
   api.useHold = false;
 

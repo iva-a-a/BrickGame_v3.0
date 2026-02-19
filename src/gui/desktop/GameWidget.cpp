@@ -3,15 +3,14 @@
 #include <QKeyEvent>
 
 static constexpr int ROWS_BOARD = 20;
-static constexpr int COL_BOARD  = 10;
+static constexpr int COL_BOARD = 10;
 
 GameWidget::GameWidget(QMainWindow* parent, GameApiQt api, int tickMs)
-  : Drawing(parent), api_(std::move(api)) {
-
+    : Drawing(parent), api_(std::move(api)) {
   setupWindow();
 
   timer_ = new QTimer(this);
-  connect(timer_, &QTimer::timeout, this, [this]{ onTick(); });
+  connect(timer_, &QTimer::timeout, this, [this] { onTick(); });
   timer_->start(tickMs);
 }
 
@@ -25,7 +24,6 @@ void GameWidget::onTick() {
   }
   update();
 }
-
 
 void GameWidget::paintEvent(QPaintEvent* e) {
   Q_UNUSED(e)
@@ -59,11 +57,7 @@ void GameWidget::paintEvent(QPaintEvent* e) {
   }
 
   p.setPen(Qt::white);
-  drawBannerStat(p,
-                 last_.level,
-                 last_.speed,
-                 last_.score,
-                 last_.high_score);
+  drawBannerStat(p, last_.level, last_.speed, last_.score, last_.high_score);
 
   if (mode_ == Mode::GameOver) {
     drawGameover(p);
@@ -72,19 +66,27 @@ void GameWidget::paintEvent(QPaintEvent* e) {
   }
 }
 
-
 UserAction_t GameWidget::mapKey(QKeyEvent* e) const {
   switch (e->key()) {
-    case Qt::Key_Down: return Down;
-    case Qt::Key_Up: return Up;
-    case Qt::Key_Left: return Left;
-    case Qt::Key_Right: return Right;
+    case Qt::Key_Down:
+      return Down;
+    case Qt::Key_Up:
+      return Up;
+    case Qt::Key_Left:
+      return Left;
+    case Qt::Key_Right:
+      return Right;
     case Qt::Key_Return:
-    case Qt::Key_Enter: return Start;
-    case Qt::Key_Escape: return Terminate;
-    case Qt::Key_Backspace: return Pause;
-    case Qt::Key_Space: return Action;
-    default: return None;
+    case Qt::Key_Enter:
+      return Start;
+    case Qt::Key_Escape:
+      return Terminate;
+    case Qt::Key_Backspace:
+      return Pause;
+    case Qt::Key_Space:
+      return Action;
+    default:
+      return None;
   }
 }
 
@@ -97,19 +99,19 @@ void GameWidget::keyPressEvent(QKeyEvent* e) {
     return;
   }
 
-if (mode_ == Mode::StartScreen) {
-  if (act == Start) {
-    startOrRestartNow();
+  if (mode_ == Mode::StartScreen) {
+    if (act == Start) {
+      startOrRestartNow();
+    }
+    return;
   }
-  return;
-}
 
-if (mode_ == Mode::GameOver) {
-  if (act == Start) {
-    startOrRestartNow();
+  if (mode_ == Mode::GameOver) {
+    if (act == Start) {
+      startOrRestartNow();
+    }
+    return;
   }
-  return;
-}
   if (act != None) {
     bool hold = false;
     if (api_.useHold) {

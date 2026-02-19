@@ -1,4 +1,5 @@
 #include "render.h"
+
 #include "../../brick_game/defines.h"
 
 void print_game_setection() {

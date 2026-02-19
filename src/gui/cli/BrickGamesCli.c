@@ -1,7 +1,6 @@
 #include "display.h"
-#include "render_logic.h"
 #include "render.h"
-
+#include "render_logic.h"
 
 int main() {
   setup_gui();
