@@ -110,25 +110,6 @@ void SnakeGame::saveHighScore() {
   }
 }
 
-//void SnakeGame::update() {
-//  if (state_ == Begin) {
-//    clearingGame();
-//  } else if (state_ == Generation) {
-//      prevTime_ = time_in_millisec();
-//      putApple();
-//      this->state_ = Falling;
-//  } else if (state_ == Falling) {
-//      checkMoveSnake();
-//  } else if (state_ == Moving_rotate) {
-//    changeDirection(currentAction_);
-//      this->state_ = Falling;
-//  } else if (state_ == Attaching) {
-//    increaseLevel();
-//    saveHighScore();
-//      state_ = Generation;
-//  }
-//}
-
 void SnakeGame::update() {
   if (state_ == Begin || state_ == Exit || state_ == End) return;
 
@@ -151,7 +132,7 @@ void SnakeGame::update() {
 
 void SnakeGame::fsm(UserAction_t action, bool hold) {
   if (action == Start && state_ == Begin) {
-      clearingGame(); 
+      clearingGame();
       state_ = Generation;
   } else if (state_ == Falling) {
     if (action == Pause) {
