@@ -115,12 +115,10 @@ void GameWidget::keyPressEvent(QKeyEvent* e) {
   if (act != None) {
     bool hold = false;
     if (api_.useHold) {
-      hold = (act == prev_);
-      prev_ = act;
+      hold = e->isAutoRepeat();
     }
     api_.input(act, hold);
   }
-
   update();
 }
 
@@ -128,8 +126,9 @@ void GameWidget::startOrRestartNow() {
   api_.input(Start, false);
   api_.input(Start, false);
 
-  prev_ = None;
   mode_ = Mode::Playing;
   last_ = api_.update();
   update();
 }
+
+void GameWidget::keyReleaseEvent(QKeyEvent* e) { Q_UNUSED(e) }

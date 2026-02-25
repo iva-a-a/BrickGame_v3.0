@@ -129,7 +129,6 @@ void SnakeGame::update() {
   }
 }
 
-
 void SnakeGame::fsm(UserAction_t action, bool hold) {
   if (action == Start && state_ == Begin) {
       clearingGame();
@@ -138,8 +137,12 @@ void SnakeGame::fsm(UserAction_t action, bool hold) {
     if (action == Pause) {
         state_ = Break;
     } else if (action == Left || action == Right || action == Up || action == Down) {
-        state_ = Moving_rotate;
+      if (hold) {
+        moveSnake();
+      } else {
         currentAction_ = action;
+        state_ = Moving_rotate;
+      }
     } else if (action == Terminate) {
         state_ = End;
     }
@@ -155,9 +158,5 @@ void SnakeGame::fsm(UserAction_t action, bool hold) {
     } else if (action == Terminate) {
         state_ = Exit;
     }
-  }
-
-  if (hold && state_ == Falling) {
-      moveSnake();
   }
 }

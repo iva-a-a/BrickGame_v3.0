@@ -16,6 +16,7 @@ class GameWidget : public Drawing {
  protected:
   void paintEvent(QPaintEvent* e) override;
   void keyPressEvent(QKeyEvent* e) override;
+  void keyReleaseEvent(QKeyEvent* e) override;
 
  private:
   void onTick();
@@ -28,6 +29,4 @@ class GameWidget : public Drawing {
 
   Mode mode_{Mode::StartScreen};
   GameInfo_t last_{};
-
-  UserAction_t prev_{None};
 };

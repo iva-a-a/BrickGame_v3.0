@@ -63,7 +63,7 @@ void MainWindow::onTetris() {
   api.drawNext = true;
   api.useHold = false;
 
-  current_ = new GameWidget(this, api, 30);
+  current_ = new GameWidget(this, api, 16);
   current_->setWindowTitle("Tetris");
   current_->show();
   hide();
