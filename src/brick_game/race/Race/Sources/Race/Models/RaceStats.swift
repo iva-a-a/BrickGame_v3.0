@@ -9,6 +9,6 @@ struct RaceStats {
     var score: Int = 0
     var highScore: Int = 0
     var level: Int = 1
-    var speed: Int = 1
+    var speed: Int = 1000
     var pause: Bool = false
 }

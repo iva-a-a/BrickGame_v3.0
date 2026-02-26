@@ -5,6 +5,7 @@
 //  Created by Alena Ivanova on 09.01.2026.
 //
 
+import Foundation
 
 struct RaceFSM {
     static func nextState(current: RaceGameState, action: Action) -> RaceGameState {
