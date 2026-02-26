@@ -1,6 +1,6 @@
 //
 //  GameList.swift
-//  Server
+//  BrickGame
 //
 //  Created by Alena Ivanova on 19.01.2026.
 //
