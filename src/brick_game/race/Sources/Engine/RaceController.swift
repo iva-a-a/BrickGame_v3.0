@@ -5,16 +5,8 @@
 //  Created by Alena Ivanova on 12.01.2026.
 //
 
-//RaceEngine — ДИРИЖЁР (главный управляющий объект)
-//Это сердце игры.
-//Он:
-//хранит state
-//хранит world
-//хранит stats
-//вызывает FSM
-//вызывает Gameplay
-
 import Foundation
+import TetrisCLib
 
 final class RaceController {
     var world = RaceWorld()
@@ -32,7 +24,7 @@ final class RaceController {
         input.hold = hold
     }
 
-    func update() -> GameInfo {
+    func update() -> (RaceWorld, RaceStats) {
         tick += 1
 
         // 1) FSM: определяем новое состояние по текущему action
@@ -94,8 +86,6 @@ final class RaceController {
                 }
             }
         }
-
-        // 5) Собираем GameInfo
-        return GameInfoMapper.toGameInfo(world: world, stats: stats)
+        return (world, stats)
     }
 }
