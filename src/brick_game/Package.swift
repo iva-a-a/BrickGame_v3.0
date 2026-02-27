@@ -56,6 +56,7 @@ let package = Package(
         .target(
             name: "RaceSwiftLib",
             dependencies: [
+                .target(name: "TetrisCLib"),
             ],
             path: "race/Sources",
             swiftSettings: swiftSettings
