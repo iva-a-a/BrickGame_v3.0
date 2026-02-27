@@ -5,6 +5,8 @@
 //  Created by Alena Ivanova on 11.12.2025.
 //
 
+import TetrisCLib
+
 enum Action: Int {
   case start = 10
   case pause = 11
@@ -17,3 +19,8 @@ enum Action: Int {
   case none = 18
 }
 
+extension Action {
+    init(_ cAction: UserAction_t) {
+        self = Action(rawValue: Int(cAction.rawValue)) ?? .none
+    }
+}
