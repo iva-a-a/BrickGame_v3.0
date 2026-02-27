@@ -15,7 +15,7 @@ public enum EngineFactory {
         case .snake:
             return SnakeEngine()
         case .race:
-            return MockRaceEngine()
+            return RaceEngine()
         }
     }
 }
