@@ -6,20 +6,21 @@
 //
 
 #include "HighScoreStorage.h"
+
 #include <fstream>
 
 void HighScoreStorage::save(int value) const {
-    std::ofstream out(fileName_, std::ios::trunc);
-    if (out) {
-      out << value;
-    }
+  std::ofstream out(fileName_, std::ios::trunc);
+  if (out) {
+    out << value;
+  }
 }
 
 int HighScoreStorage::load() const {
-    std::ifstream in(fileName_);
-    int value = 0;
-    if (in) {
-      in >> value;
-    }
-    return value;
+  std::ifstream in(fileName_);
+  int value = 0;
+  if (in) {
+    in >> value;
+  }
+  return value;
 }
