@@ -1,4 +1,5 @@
 #include "ControllerSnake.h"
+
 #include "SnakeInfoConverter.h"
 
 void Controller::userInput(UserAction_t currentAction, bool hold) {
