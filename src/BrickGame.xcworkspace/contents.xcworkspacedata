@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:brick_game">
+   </FileRef>
+   <Group
+      location = "group:gui"
+      name = "gui">
+      <Group
+         location = "group:desktop"
+         name = "desktop">
+         <FileRef
+            location = "group:GameWidget.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:GameApi.hpp">
+         </FileRef>
+         <FileRef
+            location = "group:MainWindow.hpp">
+         </FileRef>
+         <FileRef
+            location = "group:Drawing.hpp">
+         </FileRef>
+         <FileRef
+            location = "group:desktop.pro">
+         </FileRef>
+         <FileRef
+            location = "group:MainWindow.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:Drawing.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:BrickGamesDesktop.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:GameWidget.hpp">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:cli"
+         name = "cli">
+         <FileRef
+            location = "group:render_logic.h">
+         </FileRef>
+         <FileRef
+            location = "group:display.c">
+         </FileRef>
+         <FileRef
+            location = "group:BrickGamesCli.c">
+         </FileRef>
+         <FileRef
+            location = "group:render.c">
+         </FileRef>
+         <FileRef
+            location = "group:display.h">
+         </FileRef>
+         <FileRef
+            location = "group:render_logic.c">
+         </FileRef>
+         <FileRef
+            location = "group:render.h">
+         </FileRef>
+      </Group>
+   </Group>
+   <FileRef
+      location = "group:Makefile">
+   </FileRef>
+</Workspace>
