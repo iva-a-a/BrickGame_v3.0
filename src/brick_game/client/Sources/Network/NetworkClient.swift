@@ -1,20 +1,12 @@
 //
 //  NetworkClient.swift
-//  Server
+//  BrickGame
 //
 //  Created by Alena Ivanova on 04.02.2026.
 //
 
 import Foundation
 import BrickGameAPI
-
-// Для запросов без body
-private struct EmptyBody: Encodable, Sendable {}
-
-// Для ответов без тела (POST /games/{id}, POST /actions возвращают .ok)
-public struct EmptyResponse: Decodable, Sendable {
-    public init() {}
-}
 
 final class NetworkClient {
 
