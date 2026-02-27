@@ -15,6 +15,6 @@ struct SnakeEngine: BrickGameEngine {
     
     func getState() -> GameState {
         let info = snake_updateCurrentState()
-        return BrickGameStateMapper.mapSnake(info)
+        return BrickGameStateMapper.map(info: info)
     }
 }

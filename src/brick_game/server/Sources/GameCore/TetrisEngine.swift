@@ -15,6 +15,6 @@ struct TetrisEngine: BrickGameEngine {
     
     func getState() -> BrickGameAPI.GameState {
         let info = tetris_updateCurrentState()
-        return BrickGameStateMapper.mapTetris(info)
+        return BrickGameStateMapper.map(info: info)
     }
 }
