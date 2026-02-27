@@ -19,30 +19,32 @@ struct BrickGameController: RouteCollection {
         api.get("state", use: getState)
     }
 
-    // GET /api/games
     func getGames(req: Request) async throws -> GameList {
         await service.listGames()
     }
 
-    // POST /api/games/{gameId}
     func selectGame(req: Request) async throws -> HTTPStatus {
         guard let idStr = req.parameters.get("gameId"),
               let id = Int(idStr) else {
-            throw BrickGameError.internalFailure("Invalid gameId")
+            throw BrickGameError.invalidAction("Invalid gameId")
         }
         try await service.selectGame(id: id)
         return .ok
     }
 
-    // POST /api/actions
     func postAction(req: Request) async throws -> HTTPStatus {
         let action = try req.content.decode(UserAction.self)
         try await service.performAction(action)
         return .ok
     }
 
-    // GET /api/state
     func getState(req: Request) async throws -> GameState {
         try await service.currentState()
     }
 }
+
+//Логика gameAlreadyRunning блокирует смену игры навсегда
+//Сейчас если выбрали tetris, нельзя выбрать snake пока сервер не перезапустишь.
+// Обычно делают:
+//либо endpoint /api/games/reset (terminate + сброс selectedGame/engine)
+//либо разрешают смену игры, создавая новый engine и сбрасывая состояние.
