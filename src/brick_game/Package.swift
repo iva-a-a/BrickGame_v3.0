@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "Server",
+    name: "BrickGame",
     platforms: [
        .macOS(.v13)
     ],
@@ -11,7 +11,6 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor.git", from: "4.115.0"),
         // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
-        .package(path: "race/Race"),
     ],
     targets: [
         
@@ -20,7 +19,8 @@ let package = Package(
             dependencies: [
                 .target(name: "TetrisCLib"),
                 .target(name: "SnakeCPPLib"),
-                .target(name: "BrickGameAPI")
+                .target(name: "BrickGameAPI"),
+                .target(name: "RaceSwiftLib")
             ],
             path: "server/Sources/GameCore",
             swiftSettings: swiftSettings
@@ -44,13 +44,30 @@ let package = Package(
         .target(
             name: "SnakeCPPLib",
             path: "snake",
-            publicHeadersPath: "wrapper_for_swift",
+            publicHeadersPath: "wrapper",
             cxxSettings: [
-                .headerSearchPath("wrapper_for_swift"),
+                .headerSearchPath("wrapper"),
                 .headerSearchPath("."),
                 .headerSearchPath(".."),
                 .unsafeFlags(["-std=c++17"])
             ]
+        ),
+    
+        .target(
+            name: "RaceSwiftLib",
+            dependencies: [
+            ],
+            path: "race/Sources",
+            swiftSettings: swiftSettings
+        ),
+        
+        .target(
+            name: "Client",
+            dependencies: [
+                .target(name: "BrickGameAPI")
+            ],
+            path: "client/Sources",
+            swiftSettings: swiftSettings
         ),
 
         .executableTarget(
@@ -59,11 +76,7 @@ let package = Package(
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "NIOCore", package: "swift-nio"),
                 .product(name: "NIOPosix", package: "swift-nio"),
-                .product(name: "Race", package: "Race"),
-                .target(name: "GameCore"),
-                .target(name: "BrickGameAPI"),
-                .target(name: "TetrisCLib"),
-                .target(name: "SnakeCPPLib")
+                .target(name: "GameCore")
             ],
             path: "server/Sources/Server",
             swiftSettings: swiftSettings

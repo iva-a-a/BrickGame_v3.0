@@ -5,8 +5,6 @@
 //  Created by Alena Ivanova on 11.12.2025.
 //
 
-import Playgrounds
-
 enum RaceGameState {
     case begin
     case generation
