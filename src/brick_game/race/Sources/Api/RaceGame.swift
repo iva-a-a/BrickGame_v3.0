@@ -6,15 +6,20 @@
 //
 
 import Foundation
+import TetrisCLib
 
 public final class RaceGame {
     private let engine = RaceController()
+    private let converter = RaceInfoConverter()
+    
+    public init() {}
 
-    func userInput(_ action: Action, hold: Bool) {
-        engine.setInput(action, hold: hold)
+    public func userInput(action: UserAction_t, hold: Bool) {
+        engine.setInput(Action(action), hold: hold)
     }
 
-    func updateCurrentState() -> GameInfo {
-        engine.update()
+    public func updateCurrentState() -> GameInfo_t {
+        let (world, stats) = engine.update()
+        return converter.toGameInfo(world: world, stats: stats)
     }
 }
