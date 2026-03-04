@@ -6,7 +6,8 @@ void print_game_setection() {
   mvprintw(1, 7, "BRICK_GAME v2.0");
   mvprintw(3, 1, "TETRIS - press \'T\' or \'t\' to START");
   mvprintw(4, 1, "SNAKE  - press \'S\' or \'s\' to START");
-  mvprintw(5, 1, "EXIT   - press \'Esc\'");
+    mvprintw(5, 1, "Race  - press \'R\' or \'r\' to START");
+  mvprintw(6, 1, "EXIT   - press \'Esc\'");
 }
 
 void clear_screen() {
