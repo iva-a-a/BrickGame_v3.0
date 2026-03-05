@@ -8,14 +8,14 @@
 import Foundation
 import BrickGameAPI
 
-final class NetworkClient {
+public final class NetworkClient: Sendable {
 
     private let baseURL: URL
     private let session: URLSession
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
 
-    init(
+    public init(
         baseURL: URL,
         session: URLSession = .shared,
         encoder: JSONEncoder = JSONEncoder(),
@@ -52,8 +52,6 @@ final class NetworkClient {
     }
 
     private func request<T: Decodable>(_ endpoint: Endpoints, body: Data?, as _: T.Type) async throws -> T {
-
-        // path у тебя уже включает "/api/..."??? возможно нужно удалить
         let cleanPath = endpoint.path.hasPrefix("/") ? String(endpoint.path.dropFirst()) : endpoint.path
         let url = baseURL.appendingPathComponent(cleanPath)
 
@@ -79,15 +77,12 @@ final class NetworkClient {
             throw BrickGameClientError.invalidResponse
         }
 
-        // Success
         if (200...299).contains(http.statusCode) {
 
-            // сервер может вернуть пустое тело
             if data.isEmpty {
                 if T.self == EmptyResponse.self {
                     return EmptyResponse() as! T
                 }
-                // если ожидали не пустое — это ошибка протокола
                 throw BrickGameClientError.decoding(
                     DecodingError.dataCorrupted(.init(
                         codingPath: [],
@@ -103,12 +98,9 @@ final class NetworkClient {
             }
         }
 
-        // Error: пытаемся декодить ErrorMessage
         if let apiError = try? decoder.decode(ErrorMessage.self, from: data) {
             throw BrickGameClientError.server(status: http.statusCode, message: apiError.message)
         }
-
-        // fallback, если сервер вернул не-JSON
         let fallback = String(data: data, encoding: .utf8) ?? "Unknown server error"
         throw BrickGameClientError.server(status: http.statusCode, message: fallback)
     }
