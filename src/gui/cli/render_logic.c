@@ -46,7 +46,7 @@ static bool wait_restart_or_exit() {
   }
 }
 
-static void printCurrentState(GameInfo_t info, Bool drawNext) {
+static void printCurrentState(GameInfo_t info, bool drawNext) {
   if (!info.field) {
     return;
   }
@@ -69,7 +69,7 @@ static bool gameover_screen_and_wait(GameInfo_t info) {
   return wait_restart_or_exit();
 }
 
-void print_tetris() {
+void print_game() {
   print_start();
   refresh();
   while (1) {
@@ -98,46 +98,7 @@ void print_tetris() {
       userInput(Start, false);
       continue;
     }
-
+// рисуется next всегда 
     printCurrentState(info, true);
-  }
-}
-
-
-
-void print_snake() {
-  print_start();
-  refresh();
-  while (1) {
-    UserAction_t a = input_key();
-    if (a == Start) break;
-  }
-
-  userInput(Start, false);
-  UserAction_t prev = None;
-
-  while (1) {
-    UserAction_t a = input_key();
-
-    bool hold = (a != None && a == prev);
-    prev = a;
-
-    if (a != None) {
-      userInput(a, hold);
-    }
-
-    GameInfo_t info = updateCurrentState();
-
-    if (info.next == NULL) {
-      bool restart = gameover_screen_and_wait(info);
-      if (!restart) {
-        userInput(Terminate, false);
-        return;
-      }
-      userInput(Start, false);
-      continue;
-    }
-
-      printCurrentState(info, false);
   }
 }

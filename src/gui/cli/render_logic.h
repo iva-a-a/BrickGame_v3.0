@@ -5,10 +5,7 @@
 extern "C" {
 #endif
 
-// позжа заменить на одну ф-ю
-void print_tetris();
-
-void print_snake();
+void print_game();
 
 #ifdef __cplusplus
 }
