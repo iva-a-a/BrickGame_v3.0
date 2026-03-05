@@ -3,7 +3,7 @@
 
 #include <ncurses.h>
 
-#include "../../brick_game/struct.h"
+#include "../../brick_game/api/struct.h"
 
 #ifdef __cplusplus
 extern "C" {

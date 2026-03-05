@@ -1,9 +1,10 @@
 #include "render_logic.h"
-#include "../../api/apiBG.h"
+#include "../../brick_game/api/apiBG.h"
+#include "../../brick_game/defines.h"
 #include "display.h"
 #include "render.h"
 
-static void draw_matrix_blocks(int** matrix, int rows, int cols, int top,
+static void draw_matrix_blocks(int **matrix, int rows, int cols, int top,
                                int left, bool clear_area) {
   if (!matrix) {
     return;
@@ -98,7 +99,7 @@ void print_game() {
       userInput(Start, false);
       continue;
     }
-// рисуется next всегда 
+    // рисуется next всегда
     printCurrentState(info, true);
   }
 }

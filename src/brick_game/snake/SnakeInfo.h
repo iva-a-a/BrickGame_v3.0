@@ -8,7 +8,7 @@
 #pragma once
 
 #include "Coordinate.h"
-#include "../struct.h"
+#include "../api/struct.h"
 #include <list>
 
 struct SnakeInfo {

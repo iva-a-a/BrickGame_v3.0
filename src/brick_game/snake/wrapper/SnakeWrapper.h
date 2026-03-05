@@ -2,7 +2,7 @@
 #define SNAKE_WRAPPER_H
 
 #include "stdbool.h"
-#include "../../struct.h"
+#include "../../api/struct.h"
 
 #ifdef __cplusplus
 extern "C" {

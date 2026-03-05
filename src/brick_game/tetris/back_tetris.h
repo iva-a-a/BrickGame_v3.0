@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "../defines.h"
-#include "../struct.h"
+#include "../api/struct.h"
 
 #ifdef __cplusplus
 extern "C" {
