@@ -8,7 +8,7 @@
 import Foundation
 import BrickGameAPI
 
-protocol ApiServicing {
+public protocol ApiServicing: Sendable {
     func listGames() async throws -> GameList
     func selectGame(id: Int) async throws
     func sendAction(actionId: Int, hold: Bool) async throws
