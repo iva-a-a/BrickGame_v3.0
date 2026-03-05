@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-void print_game_setection();
+void print_game_selection();
 void clear_screen();
 void print_game_board();
 void print_stats_ban();

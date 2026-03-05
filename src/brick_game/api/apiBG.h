@@ -1,12 +1,12 @@
 //
-//  apiBG.swift
+//  apiBG.h
 //  BrickGame
 //
 //  Created by Alena Ivanova on 05.03.2026.
 //
 
-#ifndef APIBG_H
-#define APIBG_H
+#ifndef APIBG_h
+#define APIBG_h
 
 #include <stdbool.h>
 #incude "../struct.h"
@@ -22,4 +22,4 @@ GameInfo_t updateCurrentState();
 }
 #endif
 
-#endif  // APIBG_H
+#endif /* Header_h */
