@@ -6,12 +6,18 @@ let package = Package(
     platforms: [
        .macOS(.v13)
     ],
+    
+    products: [
+      .library(name: "ClientBridge", type: .dynamic, targets: ["ClientBridge"]),
+    ],
+    
     dependencies: [
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "4.115.0"),
         // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
     ],
+    
     targets: [
         
         .target(
@@ -63,12 +69,32 @@ let package = Package(
         ),
         
         .target(
+            name: "BrickGameCAPI",
+            path: "api",
+            publicHeadersPath: ".",
+            cSettings: [
+                .headerSearchPath(".")
+            ]
+        ),
+        
+        .target(
             name: "Client",
             dependencies: [
                 .target(name: "BrickGameAPI")
             ],
             path: "client/Sources",
+            exclude: ["Bridge"],
             swiftSettings: swiftSettings
+        ),
+        
+        .target(
+          name: "ClientBridge",
+          dependencies: [
+            .target(name: "Client"),
+            .target(name: "BrickGameCAPI"),
+          ],
+          path: "client/Sources/Bridge",
+          swiftSettings: swiftSettings
         ),
 
         .executableTarget(
