@@ -28,7 +28,7 @@ let package = Package(
         
         .target(
             name: "BrickGameAPI",
-            path: "api/BrickGameAPI",
+            path: "api_models/BrickGameAPI",
             swiftSettings: swiftSettings
         ),
         
