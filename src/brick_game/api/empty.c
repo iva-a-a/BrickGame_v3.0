@@ -5,5 +5,7 @@
 //  Created by Alena Ivanova on 05.03.2026.
 //
 
-// empty.c
-#include "BrickGameCAPI.h"
+#include "apiBG.h"
+#include "struct.h"
+
+// Intentionally empty: SPM needs at least one compilation unit.
