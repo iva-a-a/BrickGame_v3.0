@@ -9,7 +9,7 @@
 #define APIBG_h
 
 #include <stdbool.h>
-#incude "../struct.h"
+#include "struct.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,4 +22,4 @@ GameInfo_t updateCurrentState();
 }
 #endif
 
-#endif /* Header_h */
+#endif /* APIBG_h */
