@@ -1,10 +1,6 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include <ncurses.h>
-
-#include "../../brick_game/struct.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif

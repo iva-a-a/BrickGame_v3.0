@@ -1,7 +1,5 @@
 #include "render_logic.h"
-
-#include "../../brick_game/snake/wrapper/SnakeWrapper.h"
-#include "../../brick_game/tetris/controller_tetris.h"
+#include "../../api/apiBG.h"
 #include "display.h"
 #include "render.h"
 
@@ -48,14 +46,14 @@ static bool wait_restart_or_exit() {
   }
 }
 
-static void printCurrentState(GameInfo_t info) {
+static void printCurrentState(GameInfo_t info, Bool drawNext) {
   if (!info.field) {
     return;
   }
   if (info.pause) {
     print_pause();
   } else {
-    draw_frame(info, true);
+    draw_frame(info, drawNext);
   }
   refresh();
 }
@@ -81,40 +79,31 @@ void print_tetris() {
     }
   }
 
-  tetris_userInput(Start, false);
+  userInput(Start, false);
 
   while (1) {
     UserAction_t a = input_key();
     if (a != None) {
-      tetris_userInput(a, false);
+      userInput(a, false);
     }
 
-    GameInfo_t info = tetris_updateCurrentState();
+    GameInfo_t info = updateCurrentState();
 
     if (info.next == NULL) {
       bool restart = gameover_screen_and_wait(info);
       if (!restart) {
-        tetris_userInput(Terminate, false);
+        userInput(Terminate, false);
         return;
       }
-      tetris_userInput(Start, false);
+      userInput(Start, false);
       continue;
     }
 
-    printCurrentState(info);
+    printCurrentState(info, true);
   }
 }
 
-static void printCurrentStateSnake(GameInfo_t info) {
-  if (!info.field) {
-    return;
-  }
-  draw_frame(info, false);
-  if (info.pause) {
-    print_pause();
-  }
-  refresh();
-}
+
 
 void print_snake() {
   print_start();
@@ -124,7 +113,7 @@ void print_snake() {
     if (a == Start) break;
   }
 
-  snake_userInput(Start, false);
+  userInput(Start, false);
   UserAction_t prev = None;
 
   while (1) {
@@ -134,21 +123,21 @@ void print_snake() {
     prev = a;
 
     if (a != None) {
-      snake_userInput(a, hold);
+      userInput(a, hold);
     }
 
-    GameInfo_t info = snake_updateCurrentState();
+    GameInfo_t info = updateCurrentState();
 
     if (info.next == NULL) {
       bool restart = gameover_screen_and_wait(info);
       if (!restart) {
-        snake_userInput(Terminate, false);
+        userInput(Terminate, false);
         return;
       }
-      snake_userInput(Start, false);
+      userInput(Start, false);
       continue;
     }
 
-    printCurrentStateSnake(info);
+      printCurrentState(info, false);
   }
 }
