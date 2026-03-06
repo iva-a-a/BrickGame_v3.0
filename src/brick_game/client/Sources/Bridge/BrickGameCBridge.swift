@@ -41,8 +41,6 @@ final class BridgeState: @unchecked Sendable {
     private func allocateOnce() {
         storageLock.withLock { s in
             s.info.field = Self.allocMatrix(rows: Int(ROWS_BOARD), cols: Int(COL_BOARD))
-
-            // рендер рисует ROWS_FIGURE - 1
             s.nextStorage = Self.allocMatrix(rows: Int(ROWS_FIGURE), cols: Int(COL_FIGURE))
             s.info.next = s.nextStorage
 
@@ -142,7 +140,7 @@ final class BridgeState: @unchecked Sendable {
                 Self.copy(st.field, to: s.info.field, rows: Int(ROWS_BOARD), cols: Int(COL_BOARD))
 
                 if st.next.isEmpty {
-                    s.info.next = nil  // сигнал gameover
+                    s.info.next = nil
                 } else {
                     s.info.next = s.nextStorage
                     Self.copy(st.next, to: s.nextStorage, rows: Int(ROWS_FIGURE), cols: Int(COL_FIGURE))
