@@ -43,7 +43,7 @@ final class BridgeState: @unchecked Sendable {
             s.info.field = Self.allocMatrix(rows: Int(ROWS_BOARD), cols: Int(COL_BOARD))
 
             // рендер рисует ROWS_FIGURE - 1
-            s.nextStorage = Self.allocMatrix(rows: Int(ROWS_FIGURE - 1), cols: Int(COL_FIGURE))
+            s.nextStorage = Self.allocMatrix(rows: Int(ROWS_FIGURE), cols: Int(COL_FIGURE))
             s.info.next = s.nextStorage
 
             s.info.score = 0
@@ -70,7 +70,7 @@ final class BridgeState: @unchecked Sendable {
             do {
                 let list = try await api.listGames()
                 if list.games.count >= 2 {
-                    let second = list.games[1]
+                    let second = list.games[0]
                     try await api.selectGame(id: second.id)
                     await self.fetch(force: true)
                 }
@@ -145,7 +145,7 @@ final class BridgeState: @unchecked Sendable {
                     s.info.next = nil  // сигнал gameover
                 } else {
                     s.info.next = s.nextStorage
-                    Self.copy(st.next, to: s.nextStorage, rows: Int(ROWS_FIGURE - 1), cols: Int(COL_FIGURE))
+                    Self.copy(st.next, to: s.nextStorage, rows: Int(ROWS_FIGURE), cols: Int(COL_FIGURE))
                 }
 
                 s.info.score = CInt(st.score)

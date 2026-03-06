@@ -8,16 +8,25 @@
 import TetrisCLib
 import BrickGameAPI
 
-// Но у тетриса info.next часто матрица фигуры 4x4, а не 20x10.
-
-
 enum BrickGameStateMapper {
     static let rowsBoard = 20
     static let colsBoard = 10
 
+    static let rowsFigure = 4
+    static let colsFigure = 4
+
     public static func map(info: GameInfo_t) -> GameState {
-        let field = matrixToBool(info.field)
-        let next = matrixToBoolOrEmpty(info.next)
+        let field = matrixToBool(
+            info.field,
+            rows: rowsBoard,
+            cols: colsBoard
+        )
+
+        let next = matrixToBoolOrEmpty(
+            info.next,
+            rows: rowsFigure,
+            cols: colsFigure
+        )
 
         return GameState(
             field: field,
@@ -31,32 +40,38 @@ enum BrickGameStateMapper {
     }
 
     private static func matrixToBoolOrEmpty(
-        _ ptr: UnsafeMutablePointer<UnsafeMutablePointer<CInt>?>?
+        _ ptr: UnsafeMutablePointer<UnsafeMutablePointer<CInt>?>?,
+        rows: Int,
+        cols: Int
     ) -> [[Bool]] {
         guard let ptr else { return [] }
-        return matrixToBool(ptr)
+        return matrixToBool(ptr, rows: rows, cols: cols)
     }
 
     private static func matrixToBool(
-        _ ptr: UnsafeMutablePointer<UnsafeMutablePointer<CInt>?>?
+        _ ptr: UnsafeMutablePointer<UnsafeMutablePointer<CInt>?>?,
+        rows: Int,
+        cols: Int
     ) -> [[Bool]] {
-
         guard let ptr else {
             return Array(
-                repeating: Array(repeating: false, count: colsBoard),
-                count: rowsBoard
+                repeating: Array(repeating: false, count: cols),
+                count: rows
             )
         }
+
         var result = Array(
-            repeating: Array(repeating: false, count: colsBoard),
-            count: rowsBoard
+            repeating: Array(repeating: false, count: cols),
+            count: rows
         )
-        for r in 0..<rowsBoard {
+
+        for r in 0..<rows {
             guard let rowPtr = ptr[r] else { continue }
-            for c in 0..<colsBoard {
+            for c in 0..<cols {
                 result[r][c] = rowPtr[c] != 0
             }
         }
+
         return result
     }
 }
