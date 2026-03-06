@@ -15,6 +15,7 @@ ROOT := $(shell pwd)
 
 BRICK_DIR = brick_game
 GUIDIR_CLI = gui/cli
+GUIDIR_DESK = gui/desktop
 
 TET_DIR = $(BRICK_DIR)/tetris
 SNAKE_DIR = $(BRICK_DIR)/snake
@@ -61,7 +62,7 @@ all: $(GAME_DESKTOP) $(GAME_CONSOLE)
 swift_bridge:
 	cd $(BRICK_DIR) && $(SWIFT) build -c $(SWIFT_BUILD_CONF) --product $(BRIDGE_LIB_NAME)
 
-$(GAME_CONSOLE): swift_bridge $(TET_LIB) $(SNAKE_LIB) $(UI_CLI_OBJ)
+$(GAME_CONSOLE): swift_bridge $(UI_CLI_OBJ)
 	mkdir -p $(BUILD_CLI) $(LIB_DIR)
 	cp -f $(BRIDGE_DYLIB) $(LIB_DIR)/
 	$(CXX) -o $(BUILD_CLI)/$@ $(UI_CLI_OBJ) \
@@ -71,16 +72,18 @@ $(GAME_CONSOLE): swift_bridge $(TET_LIB) $(SNAKE_LIB) $(UI_CLI_OBJ)
 	@clear
 	@echo "Built in $(BUILD_CLI)"
 
-# --- desktop  пока как есть
-$(GAME_DESKTOP): $(TET_LIB) $(SNAKE_LIB)
-	mkdir -p desk
-	cd desk && qmake6 ../gui/desktop
+$(GAME_DESKTOP): swift_bridge
+	mkdir -p desk $(BUILD_DESK) $(LIB_DIR)
+	cp -f $(BRIDGE_DYLIB) $(LIB_DIR)/
+	cd desk && qmake6 ../$(GUIDIR_DESK) \
+		BRIDGE_LIB_DIR=../$(LIB_DIR) \
+		BRIDGE_RPATH=$(BRIDGE_RPATH)
 	sed -i '' 's/-framework AGL//g' desk/Makefile
 	sed -i '' 's/-framework OpenGL//g' desk/Makefile
 	cd desk && make
-	mkdir -p $(BUILD_DESK)
 	mv desk/desktop ./$(BUILD_DESK)/
 	rm -rf desk
+	@clear
 	@echo "Built in $(BUILD_DESK)"
 
 $(TET_LIB): $(TET_OBJ)
