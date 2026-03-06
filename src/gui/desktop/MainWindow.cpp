@@ -3,9 +3,6 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QWidget>
-
-#include "../../brick_game/snake/wrapper/SnakeWrapper.h"
-#include "../../brick_game/tetris/controller_tetris.h"
 #include "GameWidget.hpp"
 
 MainWindow::MainWindow() { setupUi(); }
@@ -42,14 +39,8 @@ void MainWindow::deleteGame() {
 void MainWindow::onSnake() {
   deleteGame();
 
-  GameApiQt api;
-  api.update = [] { return snake_updateCurrentState(); };
-  api.input = [](UserAction_t a, bool h) { snake_userInput(a, h); };
-  api.drawNext = false;
-  api.useHold = true;
-
-  current_ = new GameWidget(this, api, 30);
-  current_->setWindowTitle("Snake");
+  current_ = new GameWidget(this, 30);
+  current_->setWindowTitle("Brick Game");
   current_->show();
   hide();
 }
@@ -57,14 +48,8 @@ void MainWindow::onSnake() {
 void MainWindow::onTetris() {
   deleteGame();
 
-  GameApiQt api;
-  api.update = [] { return tetris_updateCurrentState(); };
-  api.input = [](UserAction_t a, bool h) { tetris_userInput(a, h); };
-  api.drawNext = true;
-  api.useHold = false;
-
-  current_ = new GameWidget(this, api, 16);
-  current_->setWindowTitle("Tetris");
+  current_ = new GameWidget(this, 16);
+  current_->setWindowTitle("Brick Game");
   current_->show();
   hide();
 }

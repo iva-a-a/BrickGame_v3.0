@@ -1,12 +1,15 @@
 #include "GameWidget.hpp"
+#include "../../brick_game/api/apiBG.h"
 
 #include <QKeyEvent>
 
 static constexpr int ROWS_BOARD = 20;
 static constexpr int COL_BOARD = 10;
+static constexpr int ROWS_FIGURE = 4;
+static constexpr int COL_FIGURE = 4;
 
-GameWidget::GameWidget(QMainWindow* parent, GameApiQt api, int tickMs)
-    : Drawing(parent), api_(std::move(api)) {
+GameWidget::GameWidget(QMainWindow* parent, int tickMs)
+    : Drawing(parent) {
   setupWindow();
 
   timer_ = new QTimer(this);
@@ -15,9 +18,11 @@ GameWidget::GameWidget(QMainWindow* parent, GameApiQt api, int tickMs)
 }
 
 void GameWidget::onTick() {
-  if (mode_ != Mode::Playing) return;
+    if (mode_ != Mode::Playing) {
+        return;
+    }
 
-  last_ = api_.update();
+  last_ = updateCurrentState();
 
   if (last_.next == nullptr) {
     mode_ = Mode::GameOver;
@@ -46,15 +51,11 @@ void GameWidget::paintEvent(QPaintEvent* e) {
     drawMatrix(last_.field, ROWS_BOARD, COL_BOARD, p, 0, 0);
   }
 
-  if (api_.drawNext) {
     int offX = SIZE_RECT * 10 + 10;
     int offY = SIZE_RECT * 2;
     if (last_.next) {
-      drawMatrix(last_.next, 4, 4, p, offX, offY);
+      drawMatrix(last_.next, ROWS_FIGURE, COL_FIGURE, p, offX, offY);
     }
-    p.setPen(Qt::white);
-    p.drawText(offX, SIZE_RECT, "Next:");
-  }
 
   p.setPen(Qt::white);
   drawBannerStat(p, last_.level, last_.speed, last_.score, last_.high_score);
@@ -93,7 +94,7 @@ UserAction_t GameWidget::mapKey(QKeyEvent* e) const {
 void GameWidget::keyPressEvent(QKeyEvent* e) {
   UserAction_t act = mapKey(e);
   if (act == Terminate) {
-    api_.input(Terminate, false);
+    userInput(Terminate, false);
     close();
     parent_->show();
     return;
@@ -113,21 +114,17 @@ void GameWidget::keyPressEvent(QKeyEvent* e) {
     return;
   }
   if (act != None) {
-    bool hold = false;
-    if (api_.useHold) {
-      hold = e->isAutoRepeat();
-    }
-    api_.input(act, hold);
+    userInput(act, e->isAutoRepeat());
   }
   update();
 }
 
 void GameWidget::startOrRestartNow() {
-  api_.input(Start, false);
-  api_.input(Start, false);
+    userInput(Start, false);
+    userInput(Start, false);
 
   mode_ = Mode::Playing;
-  last_ = api_.update();
+  last_ = updateCurrentState();
   update();
 }
 
