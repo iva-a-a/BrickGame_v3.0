@@ -31,7 +31,7 @@ static void draw_frame(GameInfo_t info, bool draw_next) {
   draw_matrix_blocks(info.field, ROWS_BOARD, COL_BOARD, 1, 1, false);
 
   if (draw_next) {
-    draw_matrix_blocks(info.next, ROWS_FIGURE - 1, COL_FIGURE, 2, 25, true);
+    draw_matrix_blocks(info.next, ROWS_FIGURE, COL_FIGURE, 1, 25, true);
   }
 }
 
