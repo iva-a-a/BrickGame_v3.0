@@ -13,7 +13,7 @@ actor BrickGameService: BrickGameServicing {
     private var selectedGame: AvailableGame?
     private var engine: (any BrickGameEngine)?
 
-    func listGames() async -> GameList {
+    func listGames() async throws -> GameList {
         GameList(games: AvailableGame.allCases.map { GameInfo(id: $0.rawValue, name: $0.name) })
     }
 

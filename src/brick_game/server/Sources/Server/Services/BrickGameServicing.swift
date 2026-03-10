@@ -10,7 +10,7 @@ import Vapor
 import BrickGameAPI
 
 protocol BrickGameServicing: Sendable {
-    func listGames() async -> GameList
+    func listGames() async throws -> GameList
     func selectGame(id: Int) async throws
     func performAction(_ action: UserAction) async throws
     func currentState() async throws -> GameState

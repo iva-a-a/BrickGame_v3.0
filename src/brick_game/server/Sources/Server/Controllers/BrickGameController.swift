@@ -20,7 +20,7 @@ struct BrickGameController: RouteCollection {
     }
 
     func getGames(req: Request) async throws -> GameList {
-        await service.listGames()
+        try await service.listGames()
     }
 
     func selectGame(req: Request) async throws -> HTTPStatus {
