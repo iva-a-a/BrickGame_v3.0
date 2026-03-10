@@ -18,6 +18,21 @@ extern "C" {
 void userInput(UserAction_t action, bool hold);
 GameInfo_t updateCurrentState();
 
+typedef struct {
+    int id;
+    char *name;
+} GameListItem_t;
+
+typedef struct {
+    GameListItem_t *items;
+    int count;
+} AvailableGames_t;
+
+AvailableGames_t listAvailableGames();
+void freeAvailableGames(AvailableGames_t games);
+
+bool selectGameById(int id);
+
 #ifdef __cplusplus
 }
 #endif
