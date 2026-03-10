@@ -8,8 +8,7 @@ static constexpr int COL_BOARD = 10;
 static constexpr int ROWS_FIGURE = 4;
 static constexpr int COL_FIGURE = 4;
 
-GameWidget::GameWidget(QMainWindow* parent, int tickMs)
-    : Drawing(parent) {
+GameWidget::GameWidget(QMainWindow *parent, int tickMs) : Drawing(parent) {
   setupWindow();
 
   timer_ = new QTimer(this);
@@ -18,9 +17,9 @@ GameWidget::GameWidget(QMainWindow* parent, int tickMs)
 }
 
 void GameWidget::onTick() {
-    if (mode_ != Mode::Playing) {
-        return;
-    }
+  if (mode_ != Mode::Playing) {
+    return;
+  }
 
   last_ = updateCurrentState();
 
@@ -30,7 +29,7 @@ void GameWidget::onTick() {
   update();
 }
 
-void GameWidget::paintEvent(QPaintEvent* e) {
+void GameWidget::paintEvent(QPaintEvent *e) {
   Q_UNUSED(e)
   QPainter p(this);
   setupPainter(p);
@@ -51,11 +50,11 @@ void GameWidget::paintEvent(QPaintEvent* e) {
     drawMatrix(last_.field, ROWS_BOARD, COL_BOARD, p, 0, 0);
   }
 
-    int offX = SIZE_RECT * 10 + 10;
-    int offY = SIZE_RECT * 2;
-    if (last_.next) {
-      drawMatrix(last_.next, ROWS_FIGURE, COL_FIGURE, p, offX, offY);
-    }
+  int offX = SIZE_RECT * 10 + 10;
+  int offY = SIZE_RECT * 2;
+  if (last_.next) {
+    drawMatrix(last_.next, ROWS_FIGURE, COL_FIGURE, p, offX, offY);
+  }
 
   p.setPen(Qt::white);
   drawBannerStat(p, last_.level, last_.speed, last_.score, last_.high_score);
@@ -67,31 +66,31 @@ void GameWidget::paintEvent(QPaintEvent* e) {
   }
 }
 
-UserAction_t GameWidget::mapKey(QKeyEvent* e) const {
+UserAction_t GameWidget::mapKey(QKeyEvent *e) const {
   switch (e->key()) {
-    case Qt::Key_Down:
-      return Down;
-    case Qt::Key_Up:
-      return Up;
-    case Qt::Key_Left:
-      return Left;
-    case Qt::Key_Right:
-      return Right;
-    case Qt::Key_Return:
-    case Qt::Key_Enter:
-      return Start;
-    case Qt::Key_Escape:
-      return Terminate;
-    case Qt::Key_Backspace:
-      return Pause;
-    case Qt::Key_Space:
-      return Action;
-    default:
-      return None;
+  case Qt::Key_Down:
+    return Down;
+  case Qt::Key_Up:
+    return Up;
+  case Qt::Key_Left:
+    return Left;
+  case Qt::Key_Right:
+    return Right;
+  case Qt::Key_Return:
+  case Qt::Key_Enter:
+    return Start;
+  case Qt::Key_Escape:
+    return Terminate;
+  case Qt::Key_Backspace:
+    return Pause;
+  case Qt::Key_Space:
+    return Action;
+  default:
+    return None;
   }
 }
 
-void GameWidget::keyPressEvent(QKeyEvent* e) {
+void GameWidget::keyPressEvent(QKeyEvent *e) {
   UserAction_t act = mapKey(e);
   if (act == Terminate) {
     userInput(Terminate, false);
@@ -120,12 +119,10 @@ void GameWidget::keyPressEvent(QKeyEvent* e) {
 }
 
 void GameWidget::startOrRestartNow() {
-    userInput(Start, false);
-    userInput(Start, false);
-
+  userInput(Start, false);
   mode_ = Mode::Playing;
   last_ = updateCurrentState();
   update();
 }
 
-void GameWidget::keyReleaseEvent(QKeyEvent* e) { Q_UNUSED(e) }
+void GameWidget::keyReleaseEvent(QKeyEvent *e) { Q_UNUSED(e) }
