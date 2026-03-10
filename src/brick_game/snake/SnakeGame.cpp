@@ -158,7 +158,8 @@ void SnakeGame::fsm(UserAction_t action, bool hold) {
     }
   } else if (state_ == End) {
     if (action == Start) {
-      state_ = Begin;
+      clearingGame();
+      state_ = Generation;
     } else if (action == Terminate) {
       state_ = Exit;
     }
