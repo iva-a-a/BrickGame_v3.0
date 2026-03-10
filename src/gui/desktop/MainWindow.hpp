@@ -3,21 +3,21 @@
 #include <QMainWindow>
 
 class GameWidget;
+class QVBoxLayout;
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
- public:
+public:
   MainWindow();
   ~MainWindow() override = default;
 
- private slots:
-  void onSnake();
-  void onTetris();
-
- private:
+private:
   void setupUi();
+  void loadGames();
+  void openSelectedGame();
   void deleteGame();
 
- private:
-  GameWidget* current_{nullptr};
+private:
+  GameWidget *current_{nullptr};
+  QVBoxLayout *layout_{nullptr};
 };

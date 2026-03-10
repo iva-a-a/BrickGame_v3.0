@@ -1,32 +1,50 @@
 #include "MainWindow.hpp"
 
-#include <QHBoxLayout>
 #include <QPushButton>
+#include <QVBoxLayout>
 #include <QWidget>
-#include "GameWidget.hpp"
 
-MainWindow::MainWindow() { setupUi(); }
+#include "GameWidget.hpp"
+#include "apiBG.h"
+
+MainWindow::MainWindow() {
+  setupUi();
+  loadGames();
+}
 
 void MainWindow::setupUi() {
-  setFixedSize(300, 100);
-  setWindowTitle("BRICK GAME V2.0");
+  setFixedSize(250, 300);
+  setWindowTitle("BRICK GAME V3.0");
 
-  auto* central = new QWidget(this);
+  auto *central = new QWidget(this);
   setCentralWidget(central);
 
-  auto* layout = new QHBoxLayout(central);
+  layout_ = new QVBoxLayout(central);
+  layout_->setSpacing(12);
+  layout_->setContentsMargins(20, 20, 20, 20);
+}
 
-  auto* snakeBtn = new QPushButton("SNAKE", this);
-  auto* tetrisBtn = new QPushButton("TETRIS", this);
+void MainWindow::loadGames() {
+  AvailableGames_t games = listAvailableGames();
 
-  snakeBtn->setFixedSize(100, 50);
-  tetrisBtn->setFixedSize(100, 50);
+  for (int i = 0; i < games.count; ++i) {
+    const GameListItem_t &game = games.items[i];
 
-  connect(snakeBtn, &QPushButton::clicked, this, &MainWindow::onSnake);
-  connect(tetrisBtn, &QPushButton::clicked, this, &MainWindow::onTetris);
+    auto *button = new QPushButton(QString::fromUtf8(game.name), this);
+    button->setFixedSize(200, 60);
 
-  layout->addWidget(snakeBtn);
-  layout->addWidget(tetrisBtn);
+    connect(button, &QPushButton::clicked, this, [this, gameId = game.id]() {
+      if (selectGameById(gameId)) {
+        openSelectedGame();
+      }
+    });
+
+    layout_->addWidget(button);
+  }
+
+  freeAvailableGames(games);
+  adjustSize();
+  setFixedSize(sizeHint());
 }
 
 void MainWindow::deleteGame() {
@@ -36,19 +54,10 @@ void MainWindow::deleteGame() {
   }
 }
 
-void MainWindow::onSnake() {
+void MainWindow::openSelectedGame() {
   deleteGame();
 
-  current_ = new GameWidget(this, 30);
-  current_->setWindowTitle("Brick Game");
-  current_->show();
-  hide();
-}
-
-void MainWindow::onTetris() {
-  deleteGame();
-
-  current_ = new GameWidget(this, 16);
+  current_ = new GameWidget(this);
   current_->setWindowTitle("Brick Game");
   current_->show();
   hide();
