@@ -14,9 +14,9 @@ public enum AvailableGame: Int, CaseIterable {
 
     public var name: String {
         switch self {
-        case .tetris: return "tetris"
-        case .snake: return "snake"
-        case .race: return "race"
+        case .tetris: return "TETRIS"
+        case .snake: return "SNAKE"
+        case .race: return "RACE"
         }
     }
 }
