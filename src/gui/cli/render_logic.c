@@ -99,7 +99,6 @@ void print_game() {
       userInput(Start, false);
       continue;
     }
-    // рисуется next всегда
     printCurrentState(info, true);
   }
 }
