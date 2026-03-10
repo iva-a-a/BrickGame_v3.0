@@ -28,4 +28,3 @@ GameInfo_t tetris_updateCurrentState() {
 
   return info;
 }
-

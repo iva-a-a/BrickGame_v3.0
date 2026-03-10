@@ -4,16 +4,16 @@
 #include "../../brick_game/defines.h"
 
 void print_game_selection(AvailableGames_t games) {
-    clear();
-    mvprintw(1, 7, "BRICK_GAME v3.0");
-    mvprintw(3, 1, "Choose game:");
+  clear();
+  mvprintw(1, 7, "BRICK_GAME v3.0");
+  mvprintw(3, 1, "Choose game:");
 
-    for (int i = 0; i < games.count; i++) {
-        mvprintw(5 + i, 1, "%d - %s", i + 1, games.items[i].name);
-    }
+  for (int i = 0; i < games.count; i++) {
+    mvprintw(5 + i, 1, "%d - %s", i + 1, games.items[i].name);
+  }
 
-    mvprintw(7 + games.count, 1, "ESC - exit");
-    refresh();
+  mvprintw(7 + games.count, 1, "ESC - exit");
+  refresh();
 }
 
 void clear_screen() {

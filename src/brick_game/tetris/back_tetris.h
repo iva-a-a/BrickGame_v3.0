@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 
-#include "../defines.h"
 #include "../api/struct.h"
+#include "../defines.h"
 
 #ifdef __cplusplus
 extern "C" {
