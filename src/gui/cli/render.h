@@ -1,11 +1,13 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+#include "../../brick_game/api/apiBG.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void print_game_selection();
+void print_game_selection(AvailableGames_t games);
 void clear_screen();
 void print_game_board();
 void print_stats_ban();
