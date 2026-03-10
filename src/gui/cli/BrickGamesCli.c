@@ -2,25 +2,30 @@
 #include "render.h"
 #include "render_logic.h"
 
-
-// при нажатии на кнопки выбора игры, должен отправляться запрос на выбор
-
-
 int main() {
-  setup_gui();
-  int key = getch();
+    setup_gui();
 
-  while (key != 27) {
-    print_game_selection();
-    if (key == 't' || key == 'T') {
-      print_game();
-      clear_screen();
-    } else if (key == 's' || key == 'S') {
-      print_game();
-      clear_screen();
+    AvailableGames_t games = listAvailableGames();
+    if (games.count <= 0 || games.items == NULL) {
+        delete_gui();
+        return 1;
     }
-    key = getch();
-  }
-  delete_gui();
-  return 0;
+
+    int key;
+    while ((key = getch()) != 27) {
+        print_game_selection(games);
+        if (key >= '1' && key <= '9') {
+            int idx = key - '1';
+            if (idx < games.count) {
+                if (selectGameById(games.items[idx].id)) {
+                    print_game();
+                    clear_screen();
+                }
+            }
+        }
+    }
+
+    freeAvailableGames(games);
+    delete_gui();
+    return 0;
 }
