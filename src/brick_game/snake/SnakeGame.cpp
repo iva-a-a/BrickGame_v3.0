@@ -114,7 +114,9 @@ void SnakeGame::saveHighScore() {
 }
 
 void SnakeGame::update() {
-  if (state_ == Begin || state_ == Exit || state_ == End) return;
+    if (state_ == Begin || state_ == Exit || state_ == End) {
+        return;
+    }
 
   if (state_ == Generation) {
     prevTime_ = time_in_millisec();
@@ -133,14 +135,13 @@ void SnakeGame::update() {
 }
 
 void SnakeGame::fsm(UserAction_t action, bool hold) {
-  if (action == Start && state_ == Begin) {
-    clearingGame();
-    state_ = Generation;
+  if (state_ == Begin && action == Start) {
+      clearingGame();
+      state_ = Generation;
   } else if (state_ == Falling) {
     if (action == Pause) {
       state_ = Break;
-    } else if (action == Left || action == Right || action == Up ||
-               action == Down) {
+    } else if (action == Left || action == Right || action == Up || action == Down) {
       if (hold) {
         moveSnake();
       } else {
@@ -161,7 +162,12 @@ void SnakeGame::fsm(UserAction_t action, bool hold) {
       clearingGame();
       state_ = Generation;
     } else if (action == Terminate) {
-      state_ = Exit;
+      state_ = Begin;
+    }
+  } else if (state_ == Exit) {
+    if (action == Start) {
+      clearingGame();
+      state_ = Generation;
     }
   }
 }
