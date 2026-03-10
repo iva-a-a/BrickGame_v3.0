@@ -13,7 +13,7 @@ struct TetrisEngine: BrickGameEngine {
         tetris_userInput(UserAction_t(UInt32(actionId)), hold)
     }
     
-    func getState() -> BrickGameAPI.GameState {
+    func getState() -> GameState {
         let info = tetris_updateCurrentState()
         return BrickGameStateMapper.map(info: info)
     }
