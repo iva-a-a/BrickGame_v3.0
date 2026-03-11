@@ -7,11 +7,10 @@
 
 enum RaceGameState {
     case begin
-    case generation
     case running
-    case `break`
     case movingLeft
     case movingRight
+    case `break`
     case end
     case exit
 }
