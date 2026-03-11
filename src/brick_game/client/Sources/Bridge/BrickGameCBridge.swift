@@ -10,7 +10,7 @@ import Foundation
 
 @_cdecl("userInput")
 public func userInput(_ action: UserAction_t, _ hold: Bool) {
-    BridgeState.shared.userInputNonBlocking(action, hold)
+    BridgeState.shared.userInputSync(action, hold)
 }
 
 @_cdecl("updateCurrentState")

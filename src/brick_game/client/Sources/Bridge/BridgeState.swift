@@ -51,32 +51,43 @@ final class BridgeState: @unchecked Sendable {
             storage.info.pause = 0
         }
     }
+    
+    func userInputSync(_ action: UserAction_t, _ hold: Bool) {
+        let semaphore = DispatchSemaphore(value: 0)
 
-    func userInputNonBlocking(_ action: UserAction_t, _ hold: Bool) {
-        Task { [api, weak self] in
+        Task { [api] in
+            defer { semaphore.signal() }
             do {
                 try await api.sendAction(actionId: Int(action.rawValue), hold: hold)
-                await self?.fetch(force: true)
             } catch {
                 print("sendAction error:", error)
             }
         }
+
+        semaphore.wait()
     }
-
+    
     func snapshotSync() -> GameInfo_t {
-        let snapshot = storageLock.withLock { storage in
-            if let state = storage.pending {
-                CBridgeMapper.apply(state, to: &storage.info, nextStorage: storage.nextStorage)
-                storage.pending = nil
+        let semaphore = DispatchSemaphore(value: 0)
+
+        Task { [api, weak self] in
+            defer { semaphore.signal() }
+
+            do {
+                let state = try await api.getState()
+                self?.storageLock.withLock { storage in
+                    CBridgeMapper.apply(state,
+                                        to: &storage.info,
+                                        nextStorage: storage.nextStorage)
+                }
+            } catch {
+                print("getState error:", error)
             }
-            return storage.info
         }
 
-        Task { [weak self] in
-            await self?.fetch(force: false)
-        }
+        semaphore.wait()
 
-        return snapshot
+        return storageLock.withLock { $0.info }
     }
 
     func listGamesSync() -> [GameInfo] {
@@ -118,12 +129,11 @@ final class BridgeState: @unchecked Sendable {
         let semaphore = DispatchSemaphore(value: 0)
         let resultLock = OSAllocatedUnfairLock(initialState: false)
 
-        Task { [api, weak self] in
+        Task { [api] in
             defer { semaphore.signal() }
 
             do {
                 try await api.selectGame(id: id)
-                await self?.fetch(force: true)
                 resultLock.withLock { $0 = true }
             } catch {
                 print("selectGame error:", error)
@@ -132,38 +142,5 @@ final class BridgeState: @unchecked Sendable {
 
         semaphore.wait()
         return resultLock.withLock { $0 }
-    }
-
-    private func fetch(force: Bool) async {
-        let now = Date().timeIntervalSince1970
-
-        let shouldFetch = storageLock.withLock { storage -> Bool in
-            if storage.fetchInFlight {
-                return false
-            }
-
-            if !force, (now - storage.lastFetchAt) < 0.03 {
-                return false
-            }
-
-            storage.fetchInFlight = true
-            storage.lastFetchAt = now
-            return true
-        }
-
-        guard shouldFetch else { return }
-
-        do {
-            let state = try await api.getState()
-            storageLock.withLock { storage in
-                storage.pending = state
-                storage.fetchInFlight = false
-            }
-        } catch {
-            storageLock.withLock { storage in
-                storage.fetchInFlight = false
-            }
-            print("getState error:", error)
-        }
     }
 }

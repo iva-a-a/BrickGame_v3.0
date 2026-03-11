@@ -13,10 +13,5 @@ import BrickGameAPI
 struct BridgeStorage {
     var info: GameInfo_t = GameInfo_t()
     var nextStorage: UnsafeMutablePointer<UnsafeMutablePointer<CInt>?>?
-
-    var pending: GameState?
-    var fetchInFlight: Bool = false
-    var lastFetchAt: TimeInterval = 0
-
     var availableGames: [GameInfo] = []
 }
