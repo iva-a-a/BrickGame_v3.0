@@ -9,21 +9,34 @@ import Foundation
 
 struct RaceFSM {
     static func nextState(current: RaceGameState, action: Action) -> RaceGameState {
-        switch action {
-        case .start:
-            return (current == .begin || current == .end) ? .generation : current
-        case .pause:
-            if current == .running { return .break }
-            if current == .break { return .running }
-            return current
-        case .left:
-            return (current == .running) ? .movingLeft : current
-        case .right:
-            return (current == .running) ? .movingRight : current
-        case .terminate:
-            return .end
-        case .up, .down, .action, .none:
-            return current
+        switch current {
+        case .begin:
+            switch action {
+            case .start: return .running
+            default: return current
+            }
+        case .running:
+            switch action {
+            case .pause: return .break
+            case .terminate: return .end
+            case .left: return .movingLeft
+            case .right: return .movingRight
+            default: return current
+            }
+        case .movingLeft, .movingRight: return current
+        case .break:
+            switch action {
+            case .pause: return .running
+            case .terminate: return .end
+            default: return current
+            }
+        case .end:
+            switch action {
+            case .start: return .running
+            case .terminate: return .exit
+            default: return .end
+            }
+        case .exit: return .exit
         }
     }
 }
