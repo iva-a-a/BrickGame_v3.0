@@ -25,5 +25,7 @@ enum GameConstants {
         static let baseSpeedMs: Int = 900
         static let minSpeedMs: Int = 200
         static let speedStepMs: Int = 80
+        
+        static let spawnRate: Int = 2 
     }
 }
