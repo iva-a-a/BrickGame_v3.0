@@ -6,21 +6,19 @@
 //
 
 import Foundation
-//import TetrisCLib
-//
-//private final class RaceShared {
-//    static let shared = RaceShared()
-//    let game = RaceGame()
-//}
-//
-//@_cdecl("race_userInput")
-//public func race_userInput(_ action: UserAction_t, _ hold: Bool) {
-//    guard let mapped = RaceActionMapper.from(action) else { return }
-//    RaceShared.shared.game.userInput(mapped, hold: hold)
-//}
-//
-//@_cdecl("race_updateCurrentState")
-//public func race_updateCurrentState() -> GameInfo_t {
-//    let info = RaceShared.shared.game.updateCurrentState()
-//    return RaceInfoConverter.toGameInfo(info)
-//}
+import TetrisCLib
+
+enum RaceBridge {
+    nonisolated(unsafe) static let controller = RaceController()
+}
+
+public func race_userInput(_ action: UInt32, _ hold: Bool) {
+    guard let action = Action(rawValue: Int(action)) else { return }
+    RaceBridge.controller.userInput(action, hold: hold)
+}
+
+public func race_updateCurrentState() -> GameInfo_t {
+    let (world, stats) = RaceBridge.controller.update()
+    let isGameOver = RaceBridge.controller.state == .end
+    return RaceInfoConverter.toGameInfo(world: world, stats: stats, isGameOver: isGameOver)
+}
