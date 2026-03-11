@@ -17,8 +17,14 @@ final class RaceController {
 
     func userInput(_ action: Action, hold: Bool) {
         _ = hold
-        state = RaceFSM.nextState(current: state, action: action)
-        stats.pause = (state == .break)
+        let oldState = state
+        let newState = RaceFSM.nextState(current: state, action: action)
+        state = newState
+
+         if (oldState == .begin && newState == .running) ||
+            (oldState == .end && newState == .running) {
+             clearGame()
+         }
     }
 
     func update() -> (RaceWorld, RaceStats) {
@@ -29,18 +35,25 @@ final class RaceController {
         case .break:
             break
         case .end:
-            RaceGameplay.changeHighScore(score: stats.score, highScore: &stats.highScore)
-            HighScoreStorage.save(highScore: stats.highScore)
+            finishGame()
         case .exit:
             break
         case .movingLeft:
-            RaceGameplay.movePlayer(world: &world, action: .left)
-            state = .running
-            updateRunningWorld()
+            let nextPlayer = RaceGameplay.nextPlayer(for: world, action: .left)
+            if RaceGameplay.intersects(player: nextPlayer, enemies: world.enemies) {
+                finishGame()
+            } else {
+                RaceGameplay.movePlayer(world: &world, to: nextPlayer)
+                state = .running
+            }
         case .movingRight:
-            RaceGameplay.movePlayer(world: &world, action: .right)
-            state = .running
-            updateRunningWorld()
+            let nextPlayer = RaceGameplay.nextPlayer(for: world, action: .right)
+            if RaceGameplay.intersects(player: nextPlayer, enemies: world.enemies) {
+                finishGame()
+            } else {
+                RaceGameplay.movePlayer(world: &world, to: nextPlayer)
+                state = .running
+            }
         case .running:
             updateRunningWorld()
         }
@@ -54,26 +67,23 @@ final class RaceController {
             return
         }
         fallCounter = 0
-        RaceGameplay.moveEnemies(world: &world, score: &stats.score)
+        
+        let nextEnemies = RaceGameplay.nextEnemies(for: world)
+        if RaceGameplay.intersects(player: world.player, enemies: nextEnemies) {
+            finishGame()
+            return
+        } else {
+            RaceGameplay.moveEnemies(world: &world, to: nextEnemies, score: &stats.score)
+        }
 
         spawnCounter += 1
-        if spawnCounter >= 2 {
-            _ = RaceGameplay.trySpawnEnemy(world: &world)
+        if spawnCounter >= GameConstants.Gameplay.spawnRate {
+            RaceGameplay.trySpawnEnemy(world: &world)
             spawnCounter = 0
         }
-
-        if RaceGameplay.hasCollision(world: world) {
-            state = .end
-            RaceGameplay.changeHighScore(score: stats.score, highScore: &stats.highScore)
-            HighScoreStorage.save(highScore: stats.highScore)
-            return
-        }
-
-        let oldLevel = stats.level
+        RaceGameplay.changeHighScore(score: stats.score, highScore: &stats.highScore)
         RaceGameplay.increaseLevel(score: stats.score, level: &stats.level)
-        if stats.level != oldLevel {
-            RaceGameplay.updateSpeed(level: stats.level, speed: &stats.speed)
-        }
+        RaceGameplay.updateSpeed(level: stats.level, speed: &stats.speed)
     }
 
     private func clearGame() {
@@ -82,5 +92,11 @@ final class RaceController {
         stats.highScore = HighScoreStorage.get()
         fallCounter = 0
         spawnCounter = 0
+    }
+    
+    private func finishGame() {
+        state = .end
+        RaceGameplay.changeHighScore(score: stats.score, highScore: &stats.highScore)
+        HighScoreStorage.save(highScore: stats.highScore)
     }
 }
