@@ -19,10 +19,10 @@ enum GameConstants {
         static let scoreToLevelUp: Int = 5
 
         static let maxSpawnAttempts: Int = 10
-        static let minTopGapY: Int = 2
-        static let minGapX: Int = 2
+        static let minTopGapY: Int = 6
+        static let minGapX: Int = 3
         
-        static let baseSpeedMs: Int = 1000
+        static let baseSpeedMs: Int = 900
         static let minSpeedMs: Int = 200
         static let speedStepMs: Int = 80
     }
