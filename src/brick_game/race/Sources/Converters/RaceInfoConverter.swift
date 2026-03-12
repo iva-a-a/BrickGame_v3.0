@@ -9,7 +9,8 @@ import Foundation
 import TetrisCLib
 
 enum RaceInfoConverter {
-    
+
+    private static let baseSpeedUI = 1000
     private static let fieldCellCount = Int(ROWS_BOARD) * Int(COL_BOARD)
     private static let nextCellCount = Int(ROWS_FIGURE) * Int(COL_FIGURE)
 
@@ -56,7 +57,7 @@ enum RaceInfoConverter {
         out.score = CInt(stats.score)
         out.high_score = CInt(stats.highScore)
         out.level = CInt(stats.level)
-        out.speed = CInt(stats.speed)
+        out.speed = CInt(stats.speed * (baseSpeedUI / GameConstants.Gameplay.baseSpeedMs))
         out.pause = stats.pause ? 1 : 0
 
         return out
