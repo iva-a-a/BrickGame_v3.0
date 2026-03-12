@@ -22,10 +22,12 @@ enum GameConstants {
         static let minTopGapY: Int = 6
         static let minGapX: Int = 3
         
-        static let baseSpeedMs: Int = 900
-        static let minSpeedMs: Int = 200
-        static let speedStepMs: Int = 80
+        static let baseSpeedMs: Int = 500
+        static let minSpeedMs: Int = 120
+        static let speedStepMs: Int = 42
         
-        static let spawnRate: Int = 2 
+        static let spawnRate: Int = 2
+        
+        static let boostMultiplier = 3
     }
 }
