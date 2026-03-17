@@ -108,6 +108,14 @@ let package = Package(
             path: "server/Sources/Server",
             swiftSettings: swiftSettings
         ),
+        
+        .testTarget(
+            name: "RaceTests",
+            dependencies: [
+                .target(name: "RaceSwiftLib")
+            ],
+            path: "race/Tests/RaceTests"
+        )
     ]
 )
 
