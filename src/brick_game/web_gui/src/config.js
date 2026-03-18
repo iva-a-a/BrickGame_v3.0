@@ -24,11 +24,11 @@ export const rootStyles = {
 };
 
 export const keyCodes = {
-    Enter: GameAction.Start,
-    KeyP: GameAction.Pause,
-    Escape: GameAction.Terminate,
+    Enter: Actions.Start,
+    KeyP: Actions.Pause,
+    Escape: Actions.Terminate,
     ArrowUp: Actions.Up,
-    ArrowDown: GameAction.Down,
-    ArrowLeft: GameAction.Left,
-    ArrowRight: GameAction.Right,
+    ArrowDown: Actions.Down,
+    ArrowLeft: Actions.Left,
+    ArrowRight: Actions.Right,
 };
