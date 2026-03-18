@@ -13,7 +13,7 @@ enum StaticFilesConfigurator {
 
     static func configure(_ app: Application) throws {
         let webGuiDir = makeWebGuiDir(app)
-
+        print(webGuiDir)
         app.middleware.use(FileMiddleware(publicDirectory: webGuiDir))
 
         app.get { req async throws -> Response in
@@ -25,18 +25,8 @@ enum StaticFilesConfigurator {
     }
 
     private static func makeWebGuiDir(_ app: Application) -> String {
-        if let root = Environment.get("BRICKGAME_ROOT") {
-            return URL(fileURLWithPath: root, isDirectory: true)
-                .appendingPathComponent("web_gui", isDirectory: true)
-                .standardizedFileURL.path
-        }
-
-        let root = URL(fileURLWithPath: app.directory.workingDirectory, isDirectory: true)
-            .appendingPathComponent("../", isDirectory: true)
-            .standardizedFileURL
-
-        return root
-            .appendingPathComponent("web_gui", isDirectory: true)
-            .standardizedFileURL.path
+        let workingDir = URL(fileURLWithPath: app.directory.workingDirectory, isDirectory: true)
+        let webGui = workingDir.appendingPathComponent("/web_gui", isDirectory: true)
+        return webGui.path
     }
 }
