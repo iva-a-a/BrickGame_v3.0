@@ -40,3 +40,26 @@ body {
 .dashboard-text {
     font-size: 2rem;
 }
+
+#side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+}
+
+.game-button {
+    padding: 10px;
+    background: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.game-button:hover {
+    background: #666;
+}
+
+.game-button.active {
+    background: orange;
+}
