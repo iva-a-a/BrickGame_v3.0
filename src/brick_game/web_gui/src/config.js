@@ -1,18 +1,6 @@
 export const GAME_BOARD_WIDTH = 10;
 export const GAME_BOARD_HEIGHT = 20;
 
-export const Actions = {
-    Start: 10,
-    Pause: 11,
-    Terminate: 12,
-    Left: 13,
-    Right: 14,
-    Up: 15,
-    Down: 16,
-    Action: 17,
-    None: 18
-};
-
 export const rootStyles = {
     '--tile-size': '20px',
     '--tile-color': '#eee',
@@ -24,11 +12,12 @@ export const rootStyles = {
 };
 
 export const keyCodes = {
-    Enter: Actions.Start,
-    KeyP: Actions.Pause,
-    Escape: Actions.Terminate,
-    ArrowUp: Actions.Up,
-    ArrowDown: Actions.Down,
-    ArrowLeft: Actions.Left,
-    ArrowRight: Actions.Right,
+    start: ['Enter'],
+    pause: ['KeyP'],
+    terminate: ['Escape'],
+    up: ['ArrowUp'],
+    right: ['ArrowRight'],
+    down: ['ArrowDown'],
+    left: ['ArrowLeft'],
+    action: ['Space'],
 };
