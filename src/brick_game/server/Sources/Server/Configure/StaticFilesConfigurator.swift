@@ -13,7 +13,6 @@ enum StaticFilesConfigurator {
 
     static func configure(_ app: Application) throws {
         let webGuiDir = makeWebGuiDir(app)
-        print(webGuiDir)
         app.middleware.use(FileMiddleware(publicDirectory: webGuiDir))
 
         app.get { req async throws -> Response in
