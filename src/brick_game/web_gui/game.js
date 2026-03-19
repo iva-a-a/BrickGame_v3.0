@@ -1,49 +1,90 @@
 import { applyRootStyles } from './src/utils.js';
 import { GameBoard } from './src/game-board.js';
 import { rootStyles, keyCodes } from './src/config.js';
-import { getGames, selectGame, postAction } from './src/api.js';
+import { getGames, selectGame, postAction, getState } from './src/api.js';
 import { GamePanel } from './src/game-panel.js';
+import { GameStats } from './src/game-stats.js';
+import { GameControls } from './src/game-controls.js';
+import { GameOverModal } from './src/game-over-modal.js';
+import { NextBoard } from './src/next-board.js';
 
 applyRootStyles(rootStyles);
 const gameBoard = new GameBoard(document.querySelector('#game-board'));
-const panel = new GamePanel(document.querySelector('#side-panel'));
+const panel = new GamePanel(document.querySelector('#game-buttons'));
+const stats = new GameStats(document.querySelector('#stats-panel'));
+const controls = new GameControls(document.querySelector('#controls-panel'));
+const modal = new GameOverModal(document.querySelector('#game-over-modal'));
+const nextBoard = new NextBoard(document.querySelector('#next-panel'));
 
-const $sidePanel = document.querySelector('#side-panel');
+let stateIntervalId = null;
+let isSendingAction = false;
 
 document.addEventListener('keydown', async function (event) {
-    if (keyCodes.start.includes(event.code)) {
-        await postAction(10, false);
-        console.log('start');
-    }
-    if (keyCodes.pause.includes(event.code)) {
-        await postAction(11, false);
-        console.log('pause');
-    }
-    if (keyCodes.terminate.includes(event.code)) {
-        await postAction(12, false);
-        console.log('terminate');
-    }
-    if (keyCodes.left.includes(event.code)) {
-        await postAction(13, false);
-        console.log('left');
-    }
-    if (keyCodes.right.includes(event.code)) {
-        await postAction(14, false);
-        console.log('right');
-    }
-    if (keyCodes.up.includes(event.code)) {
-        await postAction(15, false);
-        console.log('up');
-    }
-    if (keyCodes.down.includes(event.code)) {
-        await postAction(16, false);
-        console.log('down');
-    }
-    if (keyCodes.action.includes(event.code)) {
-        await postAction(17, false);
-        console.log('action');
+    if (event.repeat) return;
+    if (isSendingAction) return;
+
+    try {
+        isSendingAction = true;
+
+        if (keyCodes.start.includes(event.code)) {
+            await postAction(10, false);
+            modal.hide();
+        }
+        if (keyCodes.pause.includes(event.code)) {
+            await postAction(11, false);
+        }
+        if (keyCodes.terminate.includes(event.code)) {
+            await postAction(12, false);
+        }
+        if (keyCodes.left.includes(event.code)) {
+            await postAction(13, false);
+        }
+        if (keyCodes.right.includes(event.code)) {
+            await postAction(14, false);
+        }
+        if (keyCodes.up.includes(event.code)) {
+            await postAction(15, false);
+        }
+        if (keyCodes.down.includes(event.code)) {
+            await postAction(16, false);
+        }
+        if (keyCodes.action.includes(event.code)) {
+            await postAction(17, false);
+        }
+    } catch (error) {
+        console.error(error);
+    } finally {
+        isSendingAction = false;
     }
 });
+
+async function updateState() {
+    try {
+        const state = await getState();
+
+        gameBoard.render(state.field);
+        stats.render(state);
+        nextBoard.render(state.next);
+
+        const isGameOver = !state.next || state.next.length === 0;
+        modal.setVisible(isGameOver);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function startStateLoop() {
+    stopStateLoop();
+    updateState();
+    stateIntervalId = setInterval(updateState, 120);
+}
+
+function stopStateLoop() {
+    if (stateIntervalId !== null) {
+        clearInterval(stateIntervalId);
+        stateIntervalId = null;
+    }
+}
 
 async function initGames() {
     try {
@@ -51,13 +92,20 @@ async function initGames() {
         const games = data.games;
 
         panel.render(games, async (game) => {
-            console.log('Selected:', game.id);
-            await selectGame(game.id);
+            try {
+                await selectGame(game.id);
+                modal.hide();
+                gameBoard.clear();
+                nextBoard.clear();
+                await updateState();
+                startStateLoop();
+            } catch (error) {
+                console.error(error);
+            }
         });
-
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.error(error);
     }
 }
-// Запускаем
+
 initGames();
