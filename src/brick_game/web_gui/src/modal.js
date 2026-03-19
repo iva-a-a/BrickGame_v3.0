@@ -1,4 +1,4 @@
-export class PauseModal {
+export class Modal {
     constructor(container) {
         this.container = container;
     }
