@@ -1,6 +1,25 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!---->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <link rel="stylesheet" href="styles.css">-->
+<!--    <script src="./game.js" type="module" defer></script>-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>BRICK GAME V3.0</title>-->
+<!--</head>-->
+<!---->
+<!--<body>-->
+<!--    <h1>Brick Games</h1>-->
+<!--    <div id="game">-->
+<!--        <div id="side-panel"></div>-->
+<!--        <div id="game-board"></div>-->
+<!--    </div>-->
+<!--</body>-->
+<!---->
+<!--</html>-->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles.css">
@@ -8,13 +27,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BRICK GAME V3.0</title>
 </head>
-
 <body>
     <h1>Brick Games</h1>
+
     <div id="game">
-        <div id="side-panel"></div>
-        <div id="game-board"></div>
+        <div id="side-panel">
+            <div id="game-buttons"></div>
+            <div id="stats-panel"></div>
+            <div id="controls-panel"></div>
+        </div>
+
+        <div id="board-wrapper">
+            <div id="game-board"></div>
+            <div id="game-over-modal" class="game-over-modal hidden">
+                <div class="game-over-content">
+                    <h2>Game Over</h2>
+                    <p>Press Enter to restart</p>
+                    <p>Press Esc to quit</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="right-panel">
+              <div id="next-panel"></div>
+        </div>
     </div>
 </body>
-
 </html>
