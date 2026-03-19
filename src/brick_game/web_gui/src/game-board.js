@@ -26,4 +26,25 @@ export class GameBoard {
     disableTile(x, y) {
         this.getTile(x, y).classList.remove('active');
     }
+    
+    render(field) {
+        for (let y = 0; y < GAME_BOARD_HEIGHT; ++y) {
+            for (let x = 0; x < GAME_BOARD_WIDTH; ++x) {
+                const value = Boolean(field?.[y]?.[x]);
+                if (value) {
+                    this.enableTile(x, y);
+                } else {
+                    this.disableTile(x, y);
+                }
+            }
+        }
+    }
+    
+    clear() {
+        for (let y = 0; y < GAME_BOARD_HEIGHT; ++y) {
+            for (let x = 0; x < GAME_BOARD_WIDTH; ++x) {
+                this.disableTile(x, y);
+            }
+        }
+    }
 }
