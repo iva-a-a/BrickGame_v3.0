@@ -1,6 +1,9 @@
 export const GAME_BOARD_WIDTH = 10;
 export const GAME_BOARD_HEIGHT = 20;
 
+export const GAME_NEXT_WIDTH = 4;
+export const GAME_NEXT_HEIGHT = 4;
+
 export const rootStyles = {
     '--tile-size': '20px',
     '--tile-color': '#eee',
