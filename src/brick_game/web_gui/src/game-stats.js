@@ -34,7 +34,7 @@ export class GameStats {
 
     render(state) {
         this.scoreEl.textContent = state?.score ?? 0;
-        this.highScoreEl.textContent = state?.highScore ?? 0;
+        this.highScoreEl.textContent = state?.high_score ?? 0;
         this.levelEl.textContent = state?.level ?? 0;
         const speed = state?.speed ?? 0;
         this.speedEl.textContent = speed === 0
