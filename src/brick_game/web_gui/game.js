@@ -6,14 +6,17 @@ import { GamePanel } from './src/game-panel.js';
 import { GameStats } from './src/game-stats.js';
 import { GameControls } from './src/game-controls.js';
 import { GameOverModal } from './src/game-over-modal.js';
+import { PauseModal } from './src/pause-modal.js';
 import { NextBoard } from './src/next-board.js';
 
 applyRootStyles(rootStyles);
+
 const gameBoard = new GameBoard(document.querySelector('#game-board'));
 const panel = new GamePanel(document.querySelector('#game-buttons'));
 const stats = new GameStats(document.querySelector('#stats-panel'));
 const controls = new GameControls(document.querySelector('#controls-panel'));
-const modal = new GameOverModal(document.querySelector('#game-over-modal'));
+const gameOverModal = new GameOverModal(document.querySelector('#game-over-modal'));
+const pauseModal = new PauseModal(document.querySelector('#pause-modal'));
 const nextBoard = new NextBoard(document.querySelector('#next-panel'));
 
 let stateIntervalId = null;
@@ -28,7 +31,7 @@ document.addEventListener('keydown', async function (event) {
 
         if (keyCodes.start.includes(event.code)) {
             await postAction(10, false);
-            modal.hide();
+            gameOverModal.hide();
         }
         if (keyCodes.pause.includes(event.code)) {
             await postAction(11, false);
@@ -67,7 +70,9 @@ async function updateState() {
         nextBoard.render(state.next);
 
         const isGameOver = !state.next || state.next.length === 0;
-        modal.setVisible(isGameOver);
+        gameOverModal.setVisible(isGameOver);
+
+        pauseModal.setVisible(state.pause && !isGameOver);
     } catch (error) {
         console.error(error);
     }
@@ -94,7 +99,7 @@ async function initGames() {
         panel.render(games, async (game) => {
             try {
                 await selectGame(game.id);
-                modal.hide();
+                gameOverModal.hide();
                 gameBoard.clear();
                 nextBoard.clear();
                 await updateState();

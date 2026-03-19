@@ -9,7 +9,6 @@ export class GameStats {
         this.highScoreEl = this.createRow('High Score');
         this.levelEl = this.createRow('Level');
         this.speedEl = this.createRow('Speed');
-        this.pauseEl = this.createRow('Pause');
 
         this.container.appendChild(this.element);
     }
@@ -41,6 +40,5 @@ export class GameStats {
         this.speedEl.textContent = speed === 0
             ? '0.00'.padStart(5, ' ')
             : (1000 / speed).toFixed(2).padStart(5, ' ');
-        this.pauseEl.textContent = state?.pause ? 'Yes' : 'No';
     }
 }
