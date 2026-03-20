@@ -24,6 +24,14 @@ let isSendingAction = false;
 document.addEventListener('keydown', async function (event) {
     if (event.repeat) return;
     if (isSendingAction) return;
+    
+    if (
+        event.code === 'Enter' ||
+        event.code === 'NumpadEnter' ||
+        event.code === 'Space'
+    ) {
+        event.preventDefault();
+    }
 
     try {
         isSendingAction = true;
