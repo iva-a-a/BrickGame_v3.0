@@ -10,6 +10,7 @@ struct RaceStats {
     var highScore: Int = 0
     var level: Int = 1
     var speed: Int = GameConstants.Gameplay.baseSpeedMs
+    var displaySpeed: Int = GameConstants.Gameplay.baseSpeedMs
     var pause: Bool = false
     
     mutating func clear() {
@@ -17,6 +18,7 @@ struct RaceStats {
         self.highScore = 0
         self.level = 1
         self.speed = GameConstants.Gameplay.baseSpeedMs
+        self.displaySpeed = GameConstants.Gameplay.baseSpeedMs
         self.pause = false
     }
 }
