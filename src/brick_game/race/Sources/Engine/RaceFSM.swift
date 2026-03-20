@@ -36,7 +36,11 @@ struct RaceFSM {
             case .terminate: return .exit
             default: return .end
             }
-        case .exit: return .exit
+        case .exit:
+            switch action {
+            case .start: return .running
+            default: return .exit
+            }
         }
     }
 }
