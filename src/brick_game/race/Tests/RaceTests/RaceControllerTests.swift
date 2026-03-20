@@ -70,7 +70,7 @@ final class RaceControllerTests: XCTestCase {
         
         controller.userInput(.terminate, hold: false)
         
-        XCTAssertEqual(controller.state, .begin, "Из .end с .terminate должен перейти в .begin")
+        XCTAssertEqual(controller.state, .exit, "Из .end с .terminate должен перейти в .exit")
     }
     
     func testUserInputLeftFromRunning() {

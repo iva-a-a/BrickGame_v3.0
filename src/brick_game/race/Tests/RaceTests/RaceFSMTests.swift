@@ -181,15 +181,23 @@ final class RaceFSMTests: XCTestCase {
         }
     }
         
-    func testExitStateRemainsExitForAllActions() {
+    func testExitStateRemainsExitForActions() {
         let currentState: RaceGameState = .exit
-        let allActions: [Action] = [.start, .pause, .terminate, .left, .right, .up, .down, .action, .none]
+        let allActions: [Action] = [.pause, .terminate, .left, .right, .up, .down, .action, .none]
         
         for action in allActions {
             let nextState = RaceFSM.nextState(current: currentState, action: action)
             
             XCTAssertEqual(nextState, .exit, "Из .exit с \(action) должен оставаться в .exit")
         }
+    }
+    
+    func testExitStateChangesExitForStart() {
+        let currentState: RaceGameState = .exit
+        let startAction: Action = .start
+        let nextState = RaceFSM.nextState(current: currentState, action: startAction)
+        XCTAssertEqual(nextState, .running, "Из .exit с \(startAction) должен измениться в .running")
+
     }
         
     func testFullGameFlowSequence() {

@@ -61,17 +61,23 @@ final class RaceInfoConverterTests: XCTestCase {
         let baseSpeedUI = 1000
         let multiplier = baseSpeedUI / baseSpeedMs
         
-        let testGameSpeeds = [100, 250, 500, 750, 1000, 2000]
+        let testSpeeds = [100, 250, 500, 750, 1000, 2000]
         
-        for gameSpeed in testGameSpeeds {
-            stats.speed = gameSpeed
+        for speed in testSpeeds {
+            stats.displaySpeed = speed
+            stats.speed = 9999
+            let gameInfo = RaceInfoConverter.toGameInfo(
+                world: world,
+                stats: stats,
+                isGameOver: false
+            )
+            let expectedUISpeed = speed * multiplier
             
-            let gameInfo = RaceInfoConverter.toGameInfo(world: world, stats: stats, isGameOver: false)
-            
-            let expectedUISpeed = gameSpeed * multiplier
-            
-            XCTAssertEqual(Int(gameInfo.speed), expectedUISpeed,
-                          "Для gameSpeed \(gameSpeed) UI скорость должна быть \(expectedUISpeed)")
+            XCTAssertEqual(
+                Int(gameInfo.speed),
+                expectedUISpeed,
+                "Для displaySpeed \(speed) UI скорость должна быть \(expectedUISpeed)"
+            )
         }
     }
     
