@@ -57,7 +57,7 @@ enum RaceInfoConverter {
         out.score = CInt(stats.score)
         out.high_score = CInt(stats.highScore)
         out.level = CInt(stats.level)
-        out.speed = CInt(stats.speed * (baseSpeedUI / GameConstants.Gameplay.baseSpeedMs))
+        out.speed = CInt(stats.displaySpeed * (baseSpeedUI / GameConstants.Gameplay.baseSpeedMs))
         out.pause = stats.pause ? 1 : 0
 
         return out
