@@ -8,8 +8,8 @@ SRC_DIR="$ROOT_DIR"
 cd "$SRC_DIR"
 
 echo "==> Cleaning..."
-make clean || true
 make clear || true
+make clean || true
 
 echo "==> Building Swift package..."
 cd "$ROOT_DIR/brick_game"
