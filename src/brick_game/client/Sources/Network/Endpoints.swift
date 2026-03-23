@@ -27,5 +27,3 @@ enum Endpoints {
         }
     }
 }
-
-// продумать reset/restart endpoint

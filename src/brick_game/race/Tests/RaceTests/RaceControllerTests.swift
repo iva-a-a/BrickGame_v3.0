@@ -238,16 +238,13 @@ final class RaceControllerTests: XCTestCase {
     }
 
     func testHighScoreSavedOnGameEnd() {
-        // Given
         let expectedHighScore = 250
         controller.userInput(.start, hold: false)
         controller.stats.score = expectedHighScore
         
-        // When
         controller.userInput(.terminate, hold: false)
-        let _ = controller.update() // Вызовет finishGame
+        let _ = controller.update()
         
-        // Then
         let savedHighScore = HighScoreStorage.get()
         XCTAssertEqual(savedHighScore, expectedHighScore, "Рекорд должен сохраниться")
     }
