@@ -14,9 +14,6 @@
             location = "group:GameWidget.cpp">
          </FileRef>
          <FileRef
-            location = "group:GameApi.hpp">
-         </FileRef>
-         <FileRef
             location = "group:MainWindow.hpp">
          </FileRef>
          <FileRef
