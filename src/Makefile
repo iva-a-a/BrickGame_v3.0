@@ -54,7 +54,7 @@ SNAKE_LIB = $(LIB_DIR)/libsnake.a
 GAME_CONSOLE = console
 GAME_DESKTOP = desktop
 
-.PHONY: all clean swift_bridge $(GAME_CONSOLE) $(GAME_DESKTOP)
+.PHONY: all clean clear $(GAME_CONSOLE) $(GAME_DESKTOP)
 
 all: $(GAME_DESKTOP) $(GAME_CONSOLE)
 	@echo "Built: $(BUILD_CLI) and $(BUILD_DESK)"
@@ -104,7 +104,14 @@ $(OBJ_DIR)/%.o: %.cpp
 	mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) -c -o $@ $<
 
-clean:
+clean: clear
 	rm -rf $(BUILD_DIR) $(BUILD_CLI) $(BUILD_DESK) desk
 	@clear
 	@echo "Clean completed."
+
+clear:
+	rm -f brick_game/highscore_snake.txt
+	rm -f brick_game/highscore_tetris.txt
+	rm -f ~/Documents/highScoreRace.txt
+	@clear
+	@echo "Clear completed."
