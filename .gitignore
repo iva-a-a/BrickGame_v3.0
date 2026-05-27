@@ -8,86 +8,76 @@
 ._*
 
 # =========================
-# Xcode / Swift / iOS
+# Xcode / Swift
 # =========================
 
-build/
 DerivedData/
 *.xcuserdata/
 *.xcuserstate
 *.xcscmblueprint
 
-# Swift Package Manager
+# Swift Package Manager (корневой пакет: src/brick_game)
 .swiftpm/
 .build/
-Package.resolved
-
-# CocoaPods
-Pods/
-
-# Carthage
-Carthage/Build/
-
-# Fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output/
-
-# Archives / generated files
-*.ipa
-*.dSYM.zip
-*.dSYM
 
 # Playgrounds
 timeline.xctimeline
 playground.xcworkspace
 
+# Archives / debug symbols
+*.dSYM/
+*.dSYM.zip
+
 # =========================
-# C / C++
+# Сборка проекта (src/Makefile)
 # =========================
 
-# Compiled object files
+src/build/
+src/build_cli/
+src/build_desk/
+src/desk/
+
+# qmake / Qt Creator
+*.pro.user
+*.qmake.stash
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+
+# =========================
+# C / C++ артефакты
+# =========================
+
 *.o
 *.obj
 *.lo
-
-# Libraries
 *.a
 *.lib
 *.so
 *.dylib
 *.dll
-
-# Executables
 *.exe
 *.out
 *.app
-
-# Debug files
-*.dSYM/
 *.su
 *.idb
 *.pdb
 
-# CMake
+# CMake (на случай локальной сборки)
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
 compile_commands.json
 
-# Build directories
-bin/
-obj/
-out/
-debug/
-Debug/
-release/
-Release/
+# =========================
+# Игровые данные (генерируются при запуске)
+# =========================
+
+src/brick_game/highscore_snake.txt
+src/brick_game/highscore_tetris.txt
 
 # =========================
-# JavaScript / Node.js
+# JavaScript / Node (web_gui — без npm в репо)
 # =========================
 
 node_modules/
@@ -95,25 +85,21 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-
-# Package manager caches
 .npm/
 .pnpm-store/
-
-# Build output
 dist/
 coverage/
-.next/
-.nuxt/
-.vite/
 
-# Environment files
+# =========================
+# Секреты и окружение
+# =========================
+
 .env
 .env.local
 .env.*.local
 
 # =========================
-# IDE / Editors
+# IDE / редакторы
 # =========================
 
 .vscode/
@@ -122,16 +108,11 @@ coverage/
 *.swo
 
 # =========================
-# Logs
+# Логи и временные файлы
 # =========================
 
 *.log
 logs/
-
-# =========================
-# Temporary files
-# =========================
-
 tmp/
 temp/
 .cache/
